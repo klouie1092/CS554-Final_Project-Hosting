@@ -7,6 +7,7 @@ import Landing from './Landing'
 import Navigation from './Navigation';
 import SignIn from './SignIn'
 import SignUp from './SignUp'
+import ShoppingCart from './ShoppingCart';
 
 import {AuthProvider} from "../firebase/Auth"
 import PrivateRoute from './PrivateRoute';
@@ -24,6 +25,7 @@ function App() {
         <Route path='/home' element={<PrivateRoute />}>
           <Route path='/home' element={<Home />} />
         </Route>
+        <Route path='/shoppingcart' element={<ShoppingCart />}></Route>
         <Route path='/account' element={<PrivateRoute />}>
           <Route path='/account' element={<Account />} />
         </Route>
