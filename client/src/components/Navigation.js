@@ -20,6 +20,9 @@ const Navigation = () => {
             <NavLink to='/home'>Home</NavLink>
           </li>
           <li>
+            <NavLink to='/shoppingcart'>Shopping Cart</NavLink>
+          </li>
+          <li>
             <NavLink to='/account'>Account</NavLink>
           </li>
           <li>
