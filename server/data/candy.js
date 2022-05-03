@@ -12,7 +12,6 @@ async function getAll() {
 }
 
 async function getById(id) {
-
     if (!id) throw '[data]Id parameter must be supplied';
 
     if (typeof (id) !== 'string') throw "[data]Id must be a string";
@@ -20,8 +19,7 @@ async function getById(id) {
     if (id.trim().length === 0) throw "[data] the input include all space"
 
     if (!ObjectId.isValid(id)) throw "[data] the invalid ObjectId"
-
-    const candyDataCollection = await restaurant();
+    const candyDataCollection = await CandyDataInfo();
 
     const search = await candyDataCollection.findOne({ _id: ObjectId(id) });
 

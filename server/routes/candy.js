@@ -3,7 +3,7 @@ const router = express.Router();
 const candyData = require('../data/candy');
 let { ObjectId } = require('mongodb');
 
-router.get('/Candy', async (req, res) =>{
+router.get('/Candies', async (req, res) =>{
     try{
         const candyList = await candyData.getAll();
         res.json(candyList);
@@ -13,30 +13,33 @@ router.get('/Candy', async (req, res) =>{
     }
 });
 
-router.post('/Candy/searchById', async (req,res) =>{
-    let searchId = req.body;
-    if(!searchId){
-        res.status(400).json({error: '[candy Routes] search id is not provided'})
+router.get('/Candy/:id', async (req,res) =>{
+    let candyId = req.params.id;
+
+    if(!candyId){
+        res.status(400).json({error: '[candy Routes] candy id is not provided'})
     }
-    if(typeof(searchId) !== 'string'){
-        res.status(400).json({error: '[candy Routes] search id type is not string'})
+    if(typeof(candyId) !== 'string'){
+        res.status(400).json({error: '[candy Routes] candy id type is not string'})
     }
-    if(searchId.trim().length ===0){
-        res.status(400).json({error: '[candy Routes] search id can not be all space'})
+    if(candyId.trim().length ===0){
+        res.status(400).json({error: '[candy Routes] candy id can not be all space'})
 
     }
-    if(!ObjectId.isValid(searchId)){
-        res.status(400).json({error: '[candy Routes] search id is not a valid Object ID'})
+    if(!ObjectId.isValid(candyId)){
+        res.status(400).json({error: '[candy Routes] candy id is not a valid Object ID'})
 
     }
     try{
-        const search = await candyData.getById(searchId);
+        const search = await candyData.getById(candyId);
         res.json(search);
     }
     catch(e){
         res.status(400).json({ error: e });
     }
+
 });
+
 
 router.post('/Candy/searchByName', async (req,res) =>{
     let searchName = req.body;

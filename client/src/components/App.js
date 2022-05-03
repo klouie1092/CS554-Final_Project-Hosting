@@ -8,6 +8,8 @@ import Navigation from './Navigation';
 import SignIn from './SignIn'
 import SignUp from './SignUp'
 import ShoppingCart from './ShoppingCart';
+import CandyList from './CandyList'
+import Candy from './Candy';
 
 import {AuthProvider} from "../firebase/Auth"
 import PrivateRoute from './PrivateRoute';
@@ -27,10 +29,12 @@ function App() {
         </Route>
         <Route path='/shoppingcart' element={<ShoppingCart />}></Route>
         <Route path='/account' element={<PrivateRoute />}>
-          <Route path='/account' element={<Account />} />
+        <Route path='/account' element={<Account />} />
         </Route>
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
+        <Route path= '/Candies' element={<CandyList/>} />
+        <Route path= '/Candy/:id' element={<Candy/>} />
       </Routes>
     </Router>
   </AuthProvider>
