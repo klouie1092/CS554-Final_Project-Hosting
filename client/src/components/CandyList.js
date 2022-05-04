@@ -79,8 +79,7 @@ const useStyles = makeStyles({
           content.push(<i class="fa fa-star-o checked"/>);
         }
       }
-      return content
-
+      return content;
     }
 
     const buildCards = (candy) =>{

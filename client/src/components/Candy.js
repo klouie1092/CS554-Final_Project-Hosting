@@ -13,30 +13,31 @@ const Candy = () =>{
 
 
   useEffect(() => {
-      async function fetchData() {
-        try {
-          let candyId = params.id
-          const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
-          const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
-          setCandyInfo(data);
-          let changeData = await have.data.filter((e) => {
-            if (e.id === candyId){
-              return [0]
-            }
-          })
-          //console.log(changeData[0].numbers)
-          if(changeData[0].numbers){
-            //console.log('aaa')
-            setCandyHave(changeData[0].numbers)
-            //console.log(candyHave)
+    async function fetchData() {
+      try {
+        let candyId = params.id
+        const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
+        const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
+        setCandyInfo(data);
+        let changeData = await have.data.filter((e) => {
+          if (e.id === candyId){
+            return [0]
           }
-          console.log(candyHave)
-        } catch (e) {
-          console.log(e);
+        })
+        //console.log(changeData[0].numbers)
+        if(changeData[0].numbers){
+          //console.log('aaa')
+          setCandyHave(changeData[0].numbers)
+          //console.log(candyHave)
         }
+        console.log(candyHave)
+      } catch (e) {
+        console.log(e);
       }
-      fetchData();
+    }
+    fetchData();
   }, []);
+
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
     let numberha1 = Number(numberha)
@@ -62,11 +63,28 @@ const Candy = () =>{
       catch(e){
         alert(e)
       }
-      
       document.getElementById('number').value = ''
-    }
-    
+    } 
   };
+
+  const roundToHalf = (num) =>{
+    return Math.round(num * 2) / 2;
+  }
+
+  const makeStarRating = (rating) => {
+    rating = roundToHalf(rating);
+    let content = [];
+    for (let i = 0; i < 5; i++) {
+      if (rating - i === .5) {
+        content.push(<i class="fa fa-star-half-full checked"/>);
+      } else if (rating - i > 0) {
+        content.push(<i class="fa fa-star checked"/>);
+      } else {
+        content.push(<i class="fa fa-star-o checked"/>);
+      }
+    }
+    return content;
+  }
 
 
   if(candyInfo === undefined){
@@ -81,9 +99,9 @@ const Candy = () =>{
     <div className='Candy-body'>
       <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy image" />
       <h1>{candyInfo&&candyInfo.name}</h1>
+      <h2>{makeStarRating(candyInfo.rating)}</h2>
       <br />
-      <br />
-      <h2>Price: ${candyInfo&&candyInfo.price}</h2>
+      <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
       <br />
       <h3>There is {candyInfo&&candyInfo.stock} left</h3>
       <br />
