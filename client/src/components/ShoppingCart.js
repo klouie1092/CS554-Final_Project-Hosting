@@ -1,16 +1,57 @@
 import React, {useContext, useState, useEffect}  from 'react';
 import { AuthContext } from '../firebase/Auth';
-import '../App.css';
 import axios from 'axios';
 import {useParams, Link } from "react-router-dom";
+import {
+    Card,
+    CardActionArea,
+    CardContent,
+    CardMedia,
+    Grid,
+    Typography,
+    makeStyles,
+    Button
+  } from '@material-ui/core';
+
 import '../App.css';
+
+const useStyles = makeStyles({
+    card: {
+      maxWidth: 350,
+      height: 'auto',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      borderRadius: 5,
+      border: '1px solid #1e8678',
+      boxShadow: '0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);'
+    },
+    titleHead: {
+      borderBottom: '1px solid #1e8678',
+      fontWeight: 'bold'
+    },
+    grid: {
+      flexGrow: 1,
+      flexDirection: 'row'
+    },
+    media: {
+      height: '100%',
+      width: '100%'
+    },
+    button: {
+      color: '#1e8678',
+      fontWeight: 'bold',
+      fontSize: 12
+    }
+  });
 
 function ShoppingCart() {
     const {currentUser} = useContext(AuthContext);
     const [ shopcart, setShopcartData ] = useState(undefined);
     const [ error, setError ] = useState(false);
     const [ loading, setLoading ] = useState(true);
-    console.log(currentUser.email)
+    const classes = useStyles();
+    let card
+    //console.log(currentUser.email)
     useEffect(() =>{
         async function fetchData(){
             try{
@@ -20,7 +61,7 @@ function ShoppingCart() {
                 setLoading(false)
                 setError(false)
                 setShopcartData(data.data);
-                console.log(shopcart===undefined)
+                //console.log(shopcart===undefined)
 
             }
             catch(e){
@@ -31,6 +72,44 @@ function ShoppingCart() {
         fetchData();
 
     }, []);
+    const deleteC = async(id) =>{
+        try{
+            const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{id:id})
+            alert("successful delete the candy")
+        }
+        catch(e){
+            alert(e)
+        }
+	}
+    const buildCards = (candy) =>{
+        return(
+            <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy._id}>
+                <Card className={classes.card} variant='outlined'>
+                    <CardActionArea>
+                        <Link to={`/Candy/${candy._id}`}>
+                            <CardMedia
+                                className={classes.media}
+                                component='img'
+                                image = {candy.image}
+                                title = 'image'
+                            />
+                            <CardContent>
+                                <Typography
+                                className={classes.titleHead}
+                                gutterBottom
+                                variant='h6'
+                                component='h3'
+                                >
+                                {candy.name}
+                                </Typography>   
+                            </CardContent>
+                        </Link>
+                    </CardActionArea>
+                    <Button onClick={deleteC(candy._id)}>Delete this candy</Button>
+                </Card>
+            </Grid>
+        );
+    }
     if (error === true){
         return (
             <div>
@@ -48,7 +127,7 @@ function ShoppingCart() {
     else{
         //console.log(shopcart)
         if(shopcart === undefined || shopcart.length === 0){
-            console.log('aaaa')
+            //console.log('aaaa')
             return(
                 <div>
                     <h2>Your didn't add any candy in to shopping cart go add some!!!</h2>
@@ -56,9 +135,12 @@ function ShoppingCart() {
             )
         }
         else{
+            card  = shopcart && shopcart.map((eachCandy) =>{
+                return buildCards(eachCandy);
+            })
             return (
                 <div>
-                    <h2>This is the Shopping Cart page</h2>
+                    {card}
                 </div>
             );
         }
