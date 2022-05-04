@@ -74,7 +74,8 @@ function ShoppingCart() {
     }, []);
     const deleteC = async(id) =>{
         try{
-            const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{id:id})
+            console.log(id)
+            const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } }).then(res=>{console.log(res)})
             alert("successful delete the candy")
         }
         catch(e){
@@ -83,10 +84,10 @@ function ShoppingCart() {
 	}
     const buildCards = (candy) =>{
         return(
-            <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy._id}>
+            <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy.id}>
                 <Card className={classes.card} variant='outlined'>
                     <CardActionArea>
-                        <Link to={`/Candy/${candy._id}`}>
+                        <Link to={`/Candy/${candy.id}`}>
                             <CardMedia
                                 className={classes.media}
                                 component='img'
@@ -105,7 +106,8 @@ function ShoppingCart() {
                             </CardContent>
                         </Link>
                     </CardActionArea>
-                    <Button onClick={deleteC(candy._id)}>Delete this candy</Button>
+                    
+                    <Button onClick={()=>deleteC(candy.id)}>Delete this candy</Button>
                 </Card>
             </Grid>
         );
@@ -135,6 +137,7 @@ function ShoppingCart() {
             )
         }
         else{
+            //console.log(shopcart)
             card  = shopcart && shopcart.map((eachCandy) =>{
                 return buildCards(eachCandy);
             })
