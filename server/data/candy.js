@@ -121,7 +121,7 @@ module.exports = {
     getAll,
     getById,
     getByName,
-    getByRating
-
-
+    getByRating,
+    addNewRating,
+    changeRating
 }
