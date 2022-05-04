@@ -63,9 +63,29 @@ const useStyles = makeStyles({
         fetchData();
       }, []);
 
+    const roundToHalf = (num) =>{
+      return Math.round(num * 2) / 2;
+    }
+    
+    const makeStarRating = (rating) => {
+      rating = roundToHalf(rating);
+      let content = [];
+      for (let i = 0; i < 5; i++) {
+        if (rating - i === .5) {
+          content.push(<i class="fa fa-star-half-full checked"/>);
+        } else if (rating - i > 0) {
+          content.push(<i class="fa fa-star checked"/>);
+        } else {
+          content.push(<i class="fa fa-star-o checked"/>);
+        }
+      }
+      return content
+
+    }
+
     const buildCards = (candy) =>{
         return(
-            <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy._id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={candy._id}>
                 <Card className={classes.card} variant='outlined'>
                     <CardActionArea>
                         <Link to={`/Candy/${candy._id}`}>
@@ -76,14 +96,9 @@ const useStyles = makeStyles({
                                 title = 'image'
                             />
                             <CardContent>
-                                <Typography
-                                className={classes.titleHead}
-                                gutterBottom
-                                variant='h6'
-                                component='h3'
-                                >
-                                {candy.name}
-                                </Typography>   
+                                <h2>{candy.name}</h2>
+                                <h2>{makeStarRating(candy.rating)} {candy.numRatings}</h2>
+                                <h2>${candy.price.toFixed(2)}</h2>
                             </CardContent>
                         </Link>
                     </CardActionArea>
@@ -97,7 +112,11 @@ const useStyles = makeStyles({
     })
 
     return(
-        <div>{card}</div>
+      <div>
+          <Grid container className={classes.grid} spacing={5}>
+            {card}
+          </Grid>
+      </div>
     )    
 
     
