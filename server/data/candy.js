@@ -1,6 +1,6 @@
 const mongoCollections = require("../config/mongoCollections");
 const CandyDataInfo = mongoCollections.CandyData;
-let { ObjectId } = require('mongodb');
+const { ObjectId } = require('mongodb');
 
 async function getAll() {
     const candyDataCollection = await CandyDataInfo();
@@ -38,8 +38,6 @@ async function getByName(name){
     const search = await candyDataCollection.findOne({ name: name });
     if (search === null) throw "no candy fit with this name";
     return search
-
-    
 }
 
 async function getByRating(rate){
@@ -49,10 +47,75 @@ async function getByRating(rate){
     const search = await candyDataCollection.find({ rating: {$gt: rate} });
     if (search === null) throw "no candy fit with this id";
     return search
-
-    
 }
 
+async function addNewRating(id, rating){
+    if (!id) throw 'You must provide an id to search for';
+    if (typeof(id) != 'string' || id.trim() === '') throw 'not a valid id';
+    if (!ObjectId.isValid(id)) throw 'not a valid id';
+
+    if(!rating) throw 'You must provide a rating';
+    if(typeof(rating) !== 'number') throw 'rating must be a number';
+    if (rating < 0 || rating > 5) throw 'rating must be between 0 and 5';
+    
+    id = ObjectId(id);
+
+    const candyDataCollection = await CandyDataInfo();
+    const search = await candyDataCollection.findOne({ _id: id });
+    if (search === null) throw "no candy fit with this id";
+
+    const newRating = (search.rating * search.numRatings + rating) / (search.numRatings + 1);
+
+    const updatedCandy = {
+        rating: newRating,
+    };
+
+    const updatedInfo = await movieCollection.updateOne(
+        { _id: id },
+        { $set: updatedCandy}
+    );
+    if (updatedInfo.modifiedCount === 0) {
+        throw 'could not update candy successfully';
+    }
+
+    return this.get(id.toString());
+}
+
+async function changeRating(id, rating, oldRating){
+    if (!id) throw 'You must provide an id to search for';
+    if (typeof(id) != 'string' || id.trim() === '') throw 'not a valid id';
+    if (!ObjectId.isValid(id)) throw 'not a valid id';
+
+    if(!rating) throw 'You must provide a rating';
+    if(typeof(rating) !== 'number') throw 'rating must be a number';
+    if (rating < 0 || rating > 5) throw 'rating must be between 0 and 5';
+
+    if(!oldRating) throw 'You must provide a oldRating';
+    if(typeof(oldRating) !== 'number') throw 'oldRating must be a number';
+    if (oldRating < 0 || oldRating > 5) throw 'oldRating must be between 0 and 5';
+    
+    id = ObjectId(id);
+
+    const candyDataCollection = await CandyDataInfo();
+    const search = await candyDataCollection.findOne({ _id: id });
+    if (search === null) throw "no candy fit with this id";
+
+    const newRating = search.rating + ((rating - oldRating) / (search.numRatings));
+
+    const updatedCandy = {
+        rating: newRating,
+    };
+
+    const updatedInfo = await movieCollection.updateOne(
+        { _id: id },
+        { $set: updatedCandy}
+    );
+    if (updatedInfo.modifiedCount === 0) {
+        throw 'could not update candy successfully';
+    }
+
+    return this.get(id.toString());
+}
 
 module.exports = {
     getAll,
