@@ -76,8 +76,21 @@ function ShoppingCart() {
     }, []);
     const deleteC = async(id) =>{
         try{
-            console.log(id)
-            const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } }).then(res=>{console.log(res)})
+            //console.log(id)
+            const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } })
+            .then(res=>{
+                let olddata = shopcart
+                console.log(shopcart)
+                //let num 
+                let changeData = olddata.filter((e, ind) => {
+                    return e.id != res.data.id;
+                })
+                console.log(changeData)
+                // olddata.splice(num,1)
+                // console.log(shopcart)
+                // console.log(olddata)
+                setShopcartData(changeData)
+            })
             alert("successful delete the candy")
         }
         catch(e){
@@ -111,7 +124,24 @@ function ShoppingCart() {
         else{
           const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
           try{
-            const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,).then(res=>{console.log(res)})
+            const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+            .then(res=>{
+                let olddata = shopcart
+                //let num 
+                //console.log(res)
+                let changeData = olddata.map((e, ind) => {
+                    //if (e.id === res.id){
+                      //num = ind
+                    return e.id === res.data.id? res.data:e;
+                    //}
+                })
+                // olddata.splice(num,1)
+                // olddata.push
+                // console.log(res)
+                //console.log(changeData)
+                setShopcartData(changeData)
+                //console.log(changeData)
+            })
             alert('you Edit it to shopping cart')
           }
           catch(e){
