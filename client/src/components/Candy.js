@@ -57,6 +57,30 @@ const Candy = () =>{
         review: review,
         rating: rating
       });
+      document.getElementById('rating').value='';
+      document.getElementById('review').value='';
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+      var yyyy = today.getFullYear();
+      today = mm + '/' + dd + '/' + yyyy;
+      let reviewDiv =document.getElementById('newReview');
+      reviewDiv.style.display = "none";
+      let li = document.createElement("user-review");
+      let entry1 = document.createElement("h7")
+      let text1 = document.createTextNode("Review by " + email + "  on " + today)
+      let entry2 = document.createElement("p")
+      let text2 = document.createTextNode("Rating " + rating)
+      let entry3 = document.createElement("p")
+      let text3 = document.createTextNode("Review: " + review)
+      entry1.appendChild(text1)
+      entry2.appendChild(text2)
+      entry3.appendChild(text3)
+      li.appendChild(entry1)
+      li.appendChild(entry2)
+      li.appendChild(entry3)
+      let ul= document.getElementById('reviewList')
+      ul.appendChild(li)
     }catch(e){
       alert(e);
     }
@@ -162,11 +186,10 @@ const Candy = () =>{
           <ul>
               {notBlank.map(e=>
               <li>
-              <h7>Review by {e.email}  on {e.date}</h7>
-              <br/>
-              <br/>
+              <h6>Review by {e.email}  on {e.date}</h6>
+              
               <p>Rating: {e.rating}</p>
-              <br/>
+              
               <p>Review: {e.review}</p>
             </li>
                  )}
@@ -202,8 +225,8 @@ const Candy = () =>{
         {currentUser&&(<button onClick={changeCandy}> add to card</button>)}
         {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
       </div>
-      <div className="newReview">
-      {currentUser&&(<div className='input-selection'>
+      <div id="newReview">
+      {currentUser&&(<div className='review-input'>
         <h6>Review this product</h6>
         <label htmlFor='rating'>
             Rate this product:
@@ -227,14 +250,13 @@ const Candy = () =>{
       {currentUser&&(<button onClick={reviewCandy}> Write Review</button>)}
       </div>
           <h6>Reviews: </h6>
-          <ul>
+          <ul id ="reviewList">
               {notBlank.map(e=>
               <li>
-              <h7>Review by {e.email}  on {e.date}</h7>
-              <br/>
-              <br/>
+              <h6>Review by {e.email}  on {e.date}</h6>
+             
               <p>Rating: {e.rating}</p>
-              <br/>
+              
               <p>Review: {e.review}</p>
             </li>
                  )}
