@@ -1,0 +1,81 @@
+const mongoCollections = require("../config/mongoCollections");
+const CandyCollection = mongoCollections.CandyData;
+const { ObjectId } = require('mongodb');
+
+
+async function createReview(candyId,email,review,rating){
+    if(!candyId){
+        throw 'No candy ID was provided'
+      }
+      if(typeof candyId!='string'){
+        throw 'candy ID must be a string'
+      }
+      if(candyId.length==0){
+        throw 'candy ID cannot be empty'
+      }
+      if(!review){
+        throw 'No Review was provided'
+      }
+      if(!email){
+        throw 'No email was provided'
+      }
+      if(typeof review !='string'){
+        throw 'review must be a string'
+      }
+      if(typeof email!='string'){
+        throw 'email must be a string'
+      }
+      if(email.trim(' ').length===0){
+        throw 'Description cannot contain only whitespaces'
+      }
+      if(!rating){
+          throw 'No rating was provided'
+      }
+      if(typeof parseInt(rating) === NaN){
+          throw 'rating is not a number'
+      }
+      if((parseInt(rating) < 1)||(parseInt(rating)> 5)){
+          throw 'rating must be between 1 and 5'
+      }
+    
+   
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+    var yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy;
+    rating = parseInt(rating);
+    if(review.trim(' ').length===0) review = review.trim(' ');
+    let newReview = {
+        email : email,
+        review : review,
+        rating : rating,
+        date : today 
+    }
+    let candyCollection = await CandyCollection();
+
+    let candy = await candyCollection.findOne({id:ObjectId(candyId)});
+
+    candy.reviews.forEach((review)=>{
+        if(review.email === email)throw "User has already reviewed this product";
+    });
+
+    newTotalRating = (rating + (candy.numRatings*candy.rating))/ (candy.numRatings + 1);
+
+    candy.reviews.push(newReview);
+
+    const updatedInfo = await candyCollection.updateOne(
+        { _id: id },
+        { $set: candy}
+    );
+    if (updatedInfo.modifiedCount === 0) {
+        throw 'could not update candy successfully';
+    }
+
+    return newReview;
+
+}
+
+module.exports = {
+    createReview
+}

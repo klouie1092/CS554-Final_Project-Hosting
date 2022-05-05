@@ -5,6 +5,7 @@ const candyRoutes = require('./candy')
 const constructorMethod = (app) => {
   app.use('/', mainRoutes);
   app.use('/', candyRoutes);
+  app.use('/review')
 
 
   app.use('*', (req, res) => {
