@@ -104,7 +104,11 @@ const Candy = () =>{
       let total = numberha1 + candyHave
       const body = {id: params.id, name : candyInfo.name, price: candyInfo.price, image:candyInfo.image, numbers:total}
       try{
-        const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,).then(res=>{console.log(res)})
+        const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+        .then(res=>{
+          setCandyHave(res.data.numbers)
+          console.log(res)
+        })
         alert('you add it to shopping cart')
       }
       catch(e){
