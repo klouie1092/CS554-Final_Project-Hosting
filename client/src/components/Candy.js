@@ -9,7 +9,6 @@ const Candy = () =>{
   const [candyHave, setCandyHave] = useState(0)
   const params = useParams();
   const intn = /^\+?[1-9][0-9]*$/
-  let but 
 
 
   useEffect(() => {
@@ -17,20 +16,23 @@ const Candy = () =>{
       try {
         let candyId = params.id
         const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
-        const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
         setCandyInfo(data);
-        let changeData = await have.data.filter((e) => {
-          if (e.id === candyId){
-            return [0]
+
+        if(currentUser !== null){
+          const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
+          let changeData = await have.data.filter((e) => {
+            if (e.id === candyId){
+              return [0]
+            }
+          })
+          //console.log(changeData[0].numbers)
+          if(changeData[0].numbers){
+            //console.log('aaa')
+            setCandyHave(changeData[0].numbers)
+            //console.log(candyHave)
           }
-        })
-        //console.log(changeData[0].numbers)
-        if(changeData[0].numbers){
-          //console.log('aaa')
-          setCandyHave(changeData[0].numbers)
-          //console.log(candyHave)
+          console.log(candyHave)
         }
-        console.log(candyHave)
       } catch (e) {
         console.log(e);
       }
