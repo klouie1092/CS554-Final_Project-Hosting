@@ -67,7 +67,7 @@ const Candy = () =>{
       let reviewDiv =document.getElementById('newReview');
       reviewDiv.style.display = "none";
       let li = document.createElement("user-review");
-      let entry1 = document.createElement("h7")
+      let entry1 = document.createElement("p")
       let text1 = document.createTextNode("Review by " + email + "  on " + today)
       let entry2 = document.createElement("p")
       let text2 = document.createTextNode("Rating " + rating)
@@ -186,7 +186,7 @@ const Candy = () =>{
           <ul>
               {notBlank.map(e=>
               <li>
-              <h6>Review by {e.email}  on {e.date}</h6>
+              <p>Review by {e.email}  on {e.date}</p>
               
               <p>Rating: {e.rating}</p>
               
@@ -253,7 +253,7 @@ const Candy = () =>{
           <ul id ="reviewList">
               {notBlank.map(e=>
               <li>
-              <h6>Review by {e.email}  on {e.date}</h6>
+              <p>Review by {e.email}  on {e.date}</p>
              
               <p>Rating: {e.rating}</p>
               
