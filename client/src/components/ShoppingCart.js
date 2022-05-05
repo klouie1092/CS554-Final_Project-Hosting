@@ -49,14 +49,16 @@ function ShoppingCart() {
     const [ shopcart, setShopcartData ] = useState(undefined);
     const [ error, setError ] = useState(false);
     const [ loading, setLoading ] = useState(true);
+    //const [totalPrice, setTotalPrice] = useState(0);
     const classes = useStyles();
+    const intn = /^\+?[1-9][0-9]*$/
     let card
     //console.log(currentUser.email)
     useEffect(() =>{
         async function fetchData(){
             try{
                 const data = await axios.get("http://localhost:4000/usershopcart/" + currentUser.email);
-                console.log(data.data)
+                //console.log(data.data)
                 //useContext(data.data.results);
                 setLoading(false)
                 setError(false)
@@ -82,6 +84,44 @@ function ShoppingCart() {
             alert(e)
         }
 	}
+    const changeCandy = async (id,name, price, image,number) => {
+        let data1
+        try{
+            const {data} = await axios.get('http://localhost:4000/Candy/' + id);
+            data1 = data
+            console.log(data1)
+        }
+        catch(e){
+            alert(e)
+        }
+        let numberha = document.getElementById('number').value
+        let numberha1 = Number(numberha)
+        if (isNaN(numberha1) || isNaN(numberha1) || isNaN(numberha1)){
+          alert('input must be number')
+          document.getElementById('number').value = ''
+        }
+        else if(intn.test(numberha) === false){
+          alert('input must be integer')
+          document.getElementById('number').value = ''
+        }
+        else if (numberha1 > data1.stock){
+          alert('input must less than candy left')
+          document.getElementById('number').value = ''
+        }
+        else{
+          const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
+          try{
+            const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,).then(res=>{console.log(res)})
+            alert('you Edit it to shopping cart')
+          }
+          catch(e){
+            alert(e)
+          }
+          
+          document.getElementById('number').value = ''
+        }
+        
+    };
     const buildCards = (candy) =>{
         return(
             <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy.id}>
@@ -106,7 +146,15 @@ function ShoppingCart() {
                             </CardContent>
                         </Link>
                     </CardActionArea>
-                    
+                    <h2>You have {candy.numbers} {candy.name} in your shopping cart</h2>
+                    <label>
+                        <input
+                            id='number'
+                            name='number'
+                            placeholder='number that you want to add'
+                        />
+                    </label>
+                    <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Candy</Button>
                     <Button onClick={()=>deleteC(candy.id)}>Delete this candy</Button>
                 </Card>
             </Grid>
@@ -138,12 +186,17 @@ function ShoppingCart() {
         }
         else{
             //console.log(shopcart)
+            let totalprice = 0
             card  = shopcart && shopcart.map((eachCandy) =>{
+                //console.log(eachCandy)
+                totalprice = totalprice+ eachCandy.price * eachCandy.numbers
                 return buildCards(eachCandy);
             })
             return (
                 <div>
                     {card}
+                    <h1>Total Price: {totalprice}</h1>
+                    <button>Check out</button>
                 </div>
             );
         }
