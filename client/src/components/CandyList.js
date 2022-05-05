@@ -10,7 +10,6 @@ import {
     CardContent,
     CardMedia,
     Grid,
-    Typography,
     makeStyles
   } from '@material-ui/core';
 
@@ -48,6 +47,8 @@ const useStyles = makeStyles({
 
   const CandyList = () =>{
     const [candyData, setCandyData] = useState(undefined);
+    const [searchTerm, setSearchTerm] = useState('');
+
     const classes = useStyles();
 
 
@@ -62,6 +63,9 @@ const useStyles = makeStyles({
         }
         fetchData();
       }, []);
+
+    
+
 
     const roundToHalf = (num) =>{
       return Math.round(num * 2) / 2;
@@ -106,19 +110,51 @@ const useStyles = makeStyles({
         );
     }
 
-    let card  = candyData && candyData.map((eachCandy) =>{
-        return buildCards(eachCandy);
-    })
+
+
+
+    // card = candyData && candyData.map((eachCandy) =>{
+    //   return buildCards(eachCandy);
+    // })
+    
+
+
+
+
+    // return(
+    //   <div>
+    //       <SearchCandy searchValue={searchValue} />
+    //       <br />
+    //       <br />
+    //       <Grid container className={classes.grid} spacing={5}>
+    //         {card}
+    //       </Grid>
+    //   </div>
+    // )  
 
     return(
       <div>
-          <Grid container className={classes.grid} spacing={5}>
-            {card}
-          </Grid>
-      </div>
-    )    
+      <input placeholder="Enter Post Title" onChange={event => setSearchTerm(event.target.value)} />
+      <br />
+      <br />
+      
+      <Grid container className={classes.grid} spacing={5}>
 
-    
+      {
+        candyData && candyData.filter(candy =>{
+          if(searchTerm === ''){
+            return candy;
+          }else if(candy.name.toLowerCase().includes(searchTerm.toLowerCase())){
+            return candy;
+          }}).map((candy) =>(buildCards(candy)))
+      }
+
+      </Grid>
+
+
+    </div>
+    )
+
 
   }
 
