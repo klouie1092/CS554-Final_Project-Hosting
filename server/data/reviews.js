@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 
 
 async function createReview(candyId,email,review,rating){
+   
     if(!candyId){
         throw 'No candy ID was provided'
       }
@@ -45,16 +46,17 @@ async function createReview(candyId,email,review,rating){
     var yyyy = today.getFullYear();
     today = mm + '/' + dd + '/' + yyyy;
     rating = parseInt(rating);
-    if(review.trim(' ').length===0) review = review.trim(' ');
+    if(review.trim(' ').length===0) review = " ";
     let newReview = {
         email : email,
         review : review,
         rating : rating,
         date : today 
     }
+    try{
     let candyCollection = await CandyCollection();
-
-    let candy = await candyCollection.findOne({id:ObjectId(candyId)});
+    
+    let candy = await candyCollection.findOne({_id:ObjectId(candyId)});
 
     candy.reviews.forEach((review)=>{
         if(review.email === email)throw "User has already reviewed this product";
@@ -65,14 +67,18 @@ async function createReview(candyId,email,review,rating){
     candy.reviews.push(newReview);
 
     const updatedInfo = await candyCollection.updateOne(
-        { _id: id },
+        { _id: ObjectId(candyId) },
         { $set: candy}
     );
+    
     if (updatedInfo.modifiedCount === 0) {
         throw 'could not update candy successfully';
     }
 
     return newReview;
+}catch(e){
+    console.log("error: " + e)
+}
 
 }
 

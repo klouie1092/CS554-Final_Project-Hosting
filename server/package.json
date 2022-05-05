@@ -19,6 +19,7 @@
     "node-redis": "^0.1.7",
     "redis": "^3.0.2",
     "redux": "^4.1.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "xss": "^1.0.11"
   }
 }

@@ -13,6 +13,7 @@ router.post('/',async(req,res)=>{
     let emailRoutes = xss(req.body.email);
     let reviewRoutes = xss(req.body.review);
     let ratingRoutes = xss(req.body.rating)
+    
     if(!candyIdRoutes){
         res.status(400).json({error:'No Candy ID was provided'});
         
@@ -45,6 +46,7 @@ router.post('/',async(req,res)=>{
     if(parseInt(ratingRoutes) <1 || parseInt(ratingRoutes) > 5 ){
         res.status(400).json({error:"Rating provided is not valid"})
     }
+    
     try{
     const postingReview = await reviewData.createReview(candyIdRoutes,emailRoutes,reviewRoutes,parseInt(ratingRoutes));
     if(postingReview){

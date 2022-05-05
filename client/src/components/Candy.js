@@ -40,6 +40,27 @@ const Candy = () =>{
     fetchData();
   }, []);
 
+  const reviewCandy = async () =>{
+    let rating = document.getElementById('rating').value;
+    let review = document.getElementById('review').value;
+    if(!review){
+      review = " ";
+    }
+    if(review.trim(' ').length === 0) review = " ";
+    let email = currentUser.email;
+    let candyId = candyInfo._id;
+    
+    try{
+      let newReview = await axios.post('http://localhost:4000/review',{
+        candyId: candyId,
+        email: email,
+        review: review,
+        rating: rating
+      });
+    }catch(e){
+      alert(e);
+    }
+  }
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
     let numberha1 = Number(numberha)
@@ -72,7 +93,8 @@ const Candy = () =>{
   const roundToHalf = (num) =>{
     return Math.round(num * 2) / 2;
   }
-
+  
+  
   const makeStarRating = (rating) => {
     rating = roundToHalf(rating);
     let content = [];
@@ -96,36 +118,132 @@ const Candy = () =>{
       </div>
     )
   }
-
-  return(
-    <div className='Candy-body'>
-      <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy image" />
-      <h1>{candyInfo&&candyInfo.name}</h1>
-      <h2>{makeStarRating(candyInfo.rating)}</h2>
-      <br />
-      <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
-      <br />
-      <h3>There is {candyInfo&&candyInfo.stock} left</h3>
-      <br />
-      <h4>{candyInfo&&candyInfo.manufacturer}</h4>
-      <h5>{candyInfo&&candyInfo.descrption}</h5>
-      <div className='add'>
+  let notBlank = [];
+  let reviewed = false;
+  candyInfo.reviews.forEach((e)=>{
+    if(currentUser){
+    if(e.email === currentUser.email){
+      reviewed =  true;
+    }
+  }
+    if(e.review.trim(' ').length!==0) notBlank.push(e);
+  
+  })
+ 
+  if(reviewed){
+    return(
+      <div className='Candy-body'>
+        <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy image" />
+        <h1>{candyInfo&&candyInfo.name}</h1>
+        <h2>{makeStarRating(candyInfo.rating)}</h2>
+        <br />
+        <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
+        <br />
+        <h3>There is {candyInfo&&candyInfo.stock} left</h3>
+        <br />
+        <h4>{candyInfo&&candyInfo.manufacturer}</h4>
+        <h5>{candyInfo&&candyInfo.descrption}</h5>
+        <div className='add'>
+        {currentUser&&(<div className='input-selection'>
+          <label>
+            you have {candyHave} Candies:
+            <input
+              id='number'
+              name='number'
+              placeholder='number that you want to add'
+            />
+          </label>
+        </div>)}
+        {currentUser&&(<button onClick={changeCandy}> add to card</button>)}
+        {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
+      </div>
+      
+          <h6>Reviews: </h6>
+          <ul>
+              {notBlank.map(e=>
+              <li>
+              <h7>Review by {e.email}  on {e.date}</h7>
+              <br/>
+              <br/>
+              <p>Rating: {e.rating}</p>
+              <br/>
+              <p>Review: {e.review}</p>
+            </li>
+                 )}
+          </ul>
+     
+      </div>
+    )
+  }
+  else{
+    return(
+      <div className='Candy-body'>
+        <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy image" />
+        <h1>{candyInfo&&candyInfo.name}</h1>
+        <h2>{makeStarRating(candyInfo.rating)}</h2>
+        <br />
+        <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
+        <br />
+        <h3>There is {candyInfo&&candyInfo.stock} left</h3>
+        <br />
+        <h4>{candyInfo&&candyInfo.manufacturer}</h4>
+        <h5>{candyInfo&&candyInfo.descrption}</h5>
+        <div className='add'>
+        {currentUser&&(<div className='input-selection'>
+          <label>
+            you have {candyHave} Candies:
+            <input
+              id='number'
+              name='number'
+              placeholder='number that you want to add'
+            />
+          </label>
+        </div>)}
+        {currentUser&&(<button onClick={changeCandy}> add to card</button>)}
+        {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
+      </div>
+      <div className="newReview">
       {currentUser&&(<div className='input-selection'>
-        <label>
-          you have {candyHave} Candies:
-          <input
-            id='number'
-            name='number'
-            placeholder='number that you want to add'
-          />
+        <h6>Review this product</h6>
+        <label htmlFor='rating'>
+            Rate this product:
+            <select name = "rating" id ="rating">
+              <option value = "1">1</option>
+              <option value = "2">2</option>
+              <option value = "3">3</option>
+              <option value = "4">4</option>
+              <option value = "5">5</option>
+            </select>
         </label>
-      </div>)}
-      {currentUser&&(<button onClick={changeCandy}> add to card</button>)}
-      {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
-    </div>
-
-    </div>
-  )
+          <label htmlFor ="review">
+            Write a new Review:
+            <input
+              id='review'
+              name='review'
+              placeholder='Write a review on this product...'
+            />
+          </label>
+        </div>)}
+      {currentUser&&(<button onClick={reviewCandy}> Write Review</button>)}
+      </div>
+          <h6>Reviews: </h6>
+          <ul>
+              {notBlank.map(e=>
+              <li>
+              <h7>Review by {e.email}  on {e.date}</h7>
+              <br/>
+              <br/>
+              <p>Rating: {e.rating}</p>
+              <br/>
+              <p>Review: {e.review}</p>
+            </li>
+                 )}
+          </ul>
+      </div>
+    )
+    
+  }
+  
 };
 
 export default Candy
