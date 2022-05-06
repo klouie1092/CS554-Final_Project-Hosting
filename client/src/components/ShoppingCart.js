@@ -97,7 +97,7 @@ function ShoppingCart() {
             alert(e)
         }
 	}
-    const changeCandy = async (id,name, price, image,number) => {
+    const changeCandy = async (id,name, price, image, number) => {
         let data1
         try{
             const {data} = await axios.get('http://localhost:4000/Candy/' + id);
@@ -107,19 +107,19 @@ function ShoppingCart() {
         catch(e){
             alert(e)
         }
-        let numberha = document.getElementById('number').value
+        let numberha = document.getElementById(id).value
         let numberha1 = Number(numberha)
         if (isNaN(numberha1) || isNaN(numberha1) || isNaN(numberha1)){
           alert('input must be number')
-          document.getElementById('number').value = ''
+          document.getElementById(id).value = ''
         }
         else if(intn.test(numberha) === false){
           alert('input must be integer')
-          document.getElementById('number').value = ''
+          document.getElementById(id).value = ''
         }
         else if (numberha1 > data1.stock){
           alert('input must less than candy left')
-          document.getElementById('number').value = ''
+          document.getElementById(id).value = ''
         }
         else{
           const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
@@ -148,7 +148,7 @@ function ShoppingCart() {
             alert(e)
           }
           
-          document.getElementById('number').value = ''
+          document.getElementById(id).value = ''
         }
         
     };
@@ -179,7 +179,7 @@ function ShoppingCart() {
                     <h2>You have {candy.numbers} {candy.name} in your shopping cart</h2>
                     <label>
                         <input
-                            id='number'
+                            id={candy.id}
                             name='number'
                             placeholder='number that you want to add'
                         />
