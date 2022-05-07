@@ -2,6 +2,7 @@ import React, {useContext, useState, useEffect}  from 'react';
 import { AuthContext } from '../firebase/Auth';
 import axios from 'axios';
 import {useParams, Link } from "react-router-dom";
+import createPDF from './CreatePDF'
 import {
     Card,
     CardActionArea,
@@ -49,6 +50,7 @@ function ShoppingCart() {
     const [ shopcart, setShopcartData ] = useState(undefined);
     const [ error, setError ] = useState(false);
     const [ loading, setLoading ] = useState(true);
+    const [ showForm, setForm ] = useState(false);
     //const [totalPrice, setTotalPrice] = useState(0);
     const classes = useStyles();
     const intn = /^\+?[1-9][0-9]*$/
@@ -150,8 +152,13 @@ function ShoppingCart() {
           
           document.getElementById(id).value = ''
         }
-        
     };
+    const clearShopCart = async () => {
+        //Deletes the shopping cart
+        const clearData = await axios.delete(`http://localhost:4000/usershopcart/${currentUser.email}`)
+        alert('thank you for your purchase')
+        window.location.reload(false)
+    }
     const buildCards = (candy) =>{
         return(
             <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy.id}>
@@ -189,7 +196,8 @@ function ShoppingCart() {
                 </Card>
             </Grid>
         );
-    }
+    } 
+
     if (error === true){
         return (
             <div>
@@ -226,8 +234,23 @@ function ShoppingCart() {
                 <div>
                     {card}
                     <h1>Total Price: {totalprice}</h1>
-                    <button>Check out</button>
-                </div>
+                    <button onClick={() => setForm(!showForm)}>Check out</button>
+                    <form id='checkout' hidden={!showForm}>
+                        <label>First Name</label>
+                        <input type="text"/>
+                        <br/>
+
+                        <label>Last Name</label>
+                        <input type="text"/>
+                        <br/>
+
+                        <label>Credit Card Number</label>
+                        <input type="text"/>
+                        <br/>
+                    </form>
+                    <button onClick={() => clearShopCart()} hidden={!showForm}>Check Out</button>
+                    <button onClick={() => createPDF(shopcart)} hidden={!showForm}>Generate Receipt</button>
+            </div>
             );
         }
     }
