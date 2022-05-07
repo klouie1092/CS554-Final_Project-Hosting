@@ -57,6 +57,9 @@ const Candy = () =>{
         review: review,
         rating: rating
       });
+      let reviewDiv =document.getElementById('newReview');
+      reviewDiv.style.display = "none";
+      if(review.trim(' ').length!==0){
       document.getElementById('rating').value='';
       document.getElementById('review').value='';
       var today = new Date();
@@ -64,8 +67,7 @@ const Candy = () =>{
       var mm = String(today.getMonth() + 1).padStart(2, '0'); 
       var yyyy = today.getFullYear();
       today = mm + '/' + dd + '/' + yyyy;
-      let reviewDiv =document.getElementById('newReview');
-      reviewDiv.style.display = "none";
+      
       let li = document.createElement("user-review");
       let entry1 = document.createElement("p")
       let text1 = document.createTextNode("Review by " + email + "  on " + today)
@@ -81,6 +83,7 @@ const Candy = () =>{
       li.appendChild(entry3)
       let ul= document.getElementById('reviewList')
       ul.appendChild(li)
+      }
     }catch(e){
       alert(e);
     }

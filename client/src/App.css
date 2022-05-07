@@ -97,6 +97,10 @@
  	width: 100%;
 }
 
+.landing{
+	margin-top: 150px;
+	text-align:center;
+}
 .navigation > * {
 	padding-left: 15px;
 	padding-right: 15px;
