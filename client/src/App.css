@@ -15,7 +15,7 @@
 
 .App-header {
 	background-color: #282c34;
-	height: 150px;
+	height: 100px;
 	padding: 20px;
 	color: white;
 }
@@ -75,3 +75,41 @@
 .checked {
 	color: orange
 }
+
+.searchForm {
+	display: inline;
+}
+
+.weblink {
+	font-size: 30px;
+	padding-bottom: 20px;
+}
+
+.searchBar {
+	padding-bottom: 15px;
+}
+
+.navigation {
+	display: flex;
+	justify-content: center;
+  	align-items: center;
+  	height: 100px;
+ 	width: 100%;
+}
+
+.navigation > * {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+.searchForm > * {
+	font-size: 30px;
+}
+
+.allButton {
+	font-size: 30px;
+}
+
+
+
+

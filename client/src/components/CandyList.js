@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 
 
@@ -49,6 +49,7 @@ const useStyles = makeStyles({
     const [candyData, setCandyData] = useState(undefined);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteCandy, setFilteCandy] = useState('');
+    const params = useParams();
 
     const classes = useStyles();
 
@@ -58,12 +59,17 @@ const useStyles = makeStyles({
           try {
             const {data} = await axios.get('http://localhost:4000/Candies');
             setCandyData(data);
+            if (params.searchTerm) {
+              setSearchTerm(params.searchTerm);
+            } else {
+              setSearchTerm('');
+            }
           } catch (e) {
             console.log(e);
           }
         }
         fetchData();
-      }, []);
+      }, [params]);
 
     
 
@@ -135,54 +141,44 @@ const useStyles = makeStyles({
 
     return(
       <div>
-      <input placeholder="Enter Post Title" onChange={event => setSearchTerm(event.target.value)} />
-      <br />
-      <br />
+        {/*<input placeholder="Search For Candies" onChange={event => setSearchTerm(event.target.value)} /> */}
+        <br />
 
-      <label htmlFor='rating'>
-            filter this by rating:
-            <select name = "rating" id ="rating"  onChange={event => setFilteCandy(event.target.value)}>
-              <option value = ""> </option>
-              <option value = "0">1</option>
-              <option value = "1">2</option>
-              <option value = "2">3</option>
-              <option value = "3">4</option>
-              <option value = "4">5</option>
-            </select>
-      </label>
+        <label htmlFor='rating'>
+          filter this by rating:
+          <select name = "rating" id ="rating"  onChange={event => setFilteCandy(event.target.value)}>
+            <option value = ""> </option>
+            <option value = "0">1</option>
+            <option value = "1">2</option>
+            <option value = "2">3</option>
+            <option value = "3">4</option>
+            <option value = "4">5</option>
+          </select>
+        </label>
+        <br />
+        <br />
+        <br />
+        <Grid container className={classes.grid} spacing={5}>
+          {
+            candyData && candyData.filter(candy =>{
+              if(searchTerm === '' && filteCandy === ''){
+                return candy;
+              }
+              if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && filteCandy === ''){
+                return candy;
+              }
+              if(parseInt(filteCandy) < candy.rating && searchTerm === ''){
+                return candy;
+              }
+              if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && parseInt(filteCandy) < candy.rating){
+                return candy;
+              }
 
-      <br />
-      <br />
-      <br />
-
-      
-      <Grid container className={classes.grid} spacing={5}>
-
-      {
-        candyData && candyData.filter(candy =>{
-          if(searchTerm === '' && filteCandy === ''){
-            return candy;
+            }).map((candy) =>(buildCards(candy)))
           }
-          if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && filteCandy === ''){
-            return candy;
-          }
-          if(parseInt(filteCandy) < candy.rating && searchTerm === ''){
-            return candy;
-          }
-          if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && parseInt(filteCandy) < candy.rating){
-            return candy;
-          }
-
-        }).map((candy) =>(buildCards(candy)))
-      }
-
-      </Grid>
-
-
-    </div>
-    )
-
-
-  }
+        </Grid>
+      </div>
+    );
+  };
 
   export default CandyList;

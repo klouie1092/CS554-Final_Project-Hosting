@@ -34,6 +34,7 @@ function App() {
         <Route path='/signin' element={<SignIn />} />
         <Route path='/signup' element={<SignUp />} />
         <Route path= '/Candies' element={<CandyList/>} />
+        <Route path= '/Candies/:searchTerm' element={<CandyList/>} />
         <Route path= '/Candy/:id' element={<Candy/>} />
       </Routes>
     </Router>
