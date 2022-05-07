@@ -19,6 +19,7 @@ const createPDF = shopcart => {
 
     const dateStr = date[0] + date[1] + date[2] + date[3] + date[4]
     doc.save(`report_${dateStr}.pdf`)
+    window.open('http://localhost:3000/shoppingcart')
 }   
 
 export default createPDF

@@ -249,7 +249,7 @@ function ShoppingCart() {
                         <br/>
                     </form>
                     <button onClick={() => clearShopCart()} hidden={!showForm}>Check Out</button>
-                    <button onClick={() => createPDF(shopcart)} hidden={!showForm}>Generate Receipt</button>
+                    <button onClick={() => createPDF(shopcart)} hidden={!showForm} target="_blank">Generate Receipt</button>
             </div>
             );
         }

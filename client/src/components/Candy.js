@@ -109,7 +109,7 @@ const Candy = () =>{
           setCandyHave(res.data.numbers)
           console.log(res)
         })
-        alert('you add it to shopping cart')
+        alert(`You successfully purchased ${numberha1} units`)
       }
       catch(e){
         alert(e)
@@ -173,16 +173,17 @@ const Candy = () =>{
         <h5>{candyInfo&&candyInfo.descrption}</h5>
         <div className='add'>
         {currentUser&&(<div className='input-selection'>
+          <p>You currently have {candyHave} units:</p>
           <label>
-            you have {candyHave} Candies:
+            Purchase more:
             <input
               id='number'
               name='number'
-              placeholder='number that you want to add'
+              placeholder='quantity'
             />
           </label>
         </div>)}
-        {currentUser&&(<button onClick={changeCandy}> add to card</button>)}
+        {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
         {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
       </div>
       
@@ -217,23 +218,24 @@ const Candy = () =>{
         <h5>{candyInfo&&candyInfo.descrption}</h5>
         <div className='add'>
         {currentUser&&(<div className='input-selection'>
+          <p>You currently have {candyHave} units</p>
           <label>
-            you have {candyHave} Candies:
+            Purchase more:
             <input
               id='number'
               name='number'
-              placeholder='number that you want to add'
+              placeholder='quantity'
             />
           </label>
         </div>)}
-        {currentUser&&(<button onClick={changeCandy}> add to card</button>)}
+        {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
         {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
       </div>
       <div id="newReview">
       {currentUser&&(<div className='review-input'>
         <h6>Review this product</h6>
         <label htmlFor='rating'>
-            Rate this product:
+            Rating:
             <select name = "rating" id ="rating">
               <option value = "1">1</option>
               <option value = "2">2</option>
@@ -241,6 +243,7 @@ const Candy = () =>{
               <option value = "4">4</option>
               <option value = "5">5</option>
             </select>
+        <br/>
         </label>
           <label htmlFor ="review">
             Write a new Review:
