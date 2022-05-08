@@ -52,17 +52,15 @@ const Candy = () =>{
     }
     if(review.trim(' ').length === 0) review = " ";
     let email = currentUser.email;
-    //let candyId = candyInfo._id;
+    let candyId = candyInfo._id;
     
     try{
-      /*
-      let newReview = await axios.post('http://localhost:4000/review',{
+      await axios.post('http://localhost:4000/review',{
         candyId: candyId,
         email: email,
         review: review,
         rating: rating
       });
-      */
       let reviewDiv =document.getElementById('newReview');
       reviewDiv.style.display = "none";
       if(review.trim(' ').length!==0){
