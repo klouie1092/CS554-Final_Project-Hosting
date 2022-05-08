@@ -48,9 +48,15 @@ const Navigation = () => {
         <NavLink className='weblink' to='/'>
           <img src={logo} alt='logo failed to load'/>
         </NavLink>
-        <NavLink className='weblink' to='/candies'> 
-          Candy
-        </NavLink>
+        <div className='searchBar'>
+          <NavLink class='weblink' to='/candies'>
+            <input class='allButton' type="submit" value="All"/>
+          </NavLink>
+          <form class="searchForm" onSubmit={handleSubmit}>
+            <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
+            <button type="submit"><i class="fa fa-search"></i></button>
+          </form>
+        </div>
         <NavLink className='weblink' to='/signup'> 
           Sign-up
         </NavLink>

@@ -2,13 +2,16 @@ import React, {useState, useEffect,useContext} from 'react';
 import axios from 'axios';
 import {useParams } from "react-router-dom";
 import { AuthContext } from '../firebase/Auth';
+import '../Candy.css';
 
 const Candy = () =>{
   const {currentUser} = useContext(AuthContext);
   const [candyInfo, setCandyInfo] = useState(undefined)
   const [candyHave, setCandyHave] = useState(0)
   const params = useParams();
-  const intn = /^\+?[1-9][0-9]*$/
+  const intn = /^\+?[1-9][0-9]*$/;
+
+  const veganCheck = 'https://iamgoingvegan.b-cdn.net/wp-content/uploads/2020/05/European-Vegetarian-Symbol-961x1024.png'
 
 
   useEffect(() => {
@@ -164,31 +167,39 @@ const Candy = () =>{
   if(reviewed){
     return(
       <div className='Candy-body'>
-        <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy image" />
-        <h1>{candyInfo&&candyInfo.name}</h1>
-        <h2>{makeStarRating(candyInfo.rating)}</h2>
-        <br />
-        <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
-        <br />
-        <h3>There is {candyInfo&&candyInfo.stock} left</h3>
-        <br />
-        <h4>{candyInfo&&candyInfo.manufacturer}</h4>
-        <h5>{candyInfo&&candyInfo.descrption}</h5>
-        <div className='add'>
-        {currentUser&&(<div className='input-selection'>
-          <p>You currently have {candyHave} units:</p>
-          <label>
-            Purchase more:
-            <input
-              id='number'
-              name='number'
-              placeholder='quantity'
-            />
-          </label>
-        </div>)}
-        {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
-        {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
-      </div>
+        <div className='Top-Info'>
+          <img src = {candyInfo.image} alt = "Candy image" />
+          <div className='Right-Top'>
+            <div className='Top-Top-Info'>
+              <p><u>{candyInfo&&candyInfo.manufacturer}</u></p>
+              {candyInfo.vegan&&<img src = {veganCheck} width={40} height={40}></img>}
+            </div>
+            <h1>{candyInfo&&candyInfo.name}</h1>
+            <div className='Review-Info'>
+              <h2>{makeStarRating(candyInfo.rating)}</h2>
+              <p>({candyInfo.rating.toFixed(1)})</p>
+              <a className='numReviews' href='#reviews'>{candyInfo.numRatings} {candyInfo.numRatings > 1? 'Ratings' : 'Rating'}</a>
+            </div>
+            <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
+            <div className='add'>
+              {currentUser&&(<div className='input-selection'>
+                <p>You currently have {candyHave} units:</p>
+                <label>
+                  Purchase more:
+                  <input
+                    id='number'
+                    name='number'
+                    placeholder='quantity'
+                  />
+                </label>
+              </div>)}
+              {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
+              {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
+              <h3>There is {candyInfo&&candyInfo.stock} left in stock</h3>
+              <h5>{candyInfo&&candyInfo.descrption}</h5>
+            </div>
+          </div>
+        </div>
       
           <h6>Reviews: </h6>
           <ul>

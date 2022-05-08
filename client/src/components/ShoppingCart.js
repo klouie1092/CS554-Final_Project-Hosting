@@ -233,7 +233,7 @@ function ShoppingCart() {
             return (
                 <div>
                     {card}
-                    <h1>Total Price: {totalprice}</h1>
+                    <h1>Total Price: {totalprice.toFixed(2)}</h1>
                     <button onClick={() => setForm(!showForm)}>Check out</button>
                     <form id='checkout' hidden={!showForm}>
                         <label>First Name</label>

@@ -1,0 +1,70 @@
+.Candy-body {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.Candy-body > * {
+    justify-content: center;
+}
+
+
+.Top-Info {
+    display: flex;
+}
+
+.Top-Info > * {
+    margin: 30px;
+}
+
+.Right-Top {
+    margin: 70px;
+    padding: 25px;
+    padding-top: 10px;
+    border-radius: 10px;
+    border: 1px;
+    box-shadow: inset 0 1px 1px rgba(120,120,120,0.16), 0 1px 6px rgba(120,120,120,0.45);;
+}
+
+.Right-Top > * {
+    max-width: 600px;
+}
+
+.Right-Top > h1{
+    margin-top: 8px;
+    margin-bottom: 15px;
+}
+
+.Right-Top > p{
+    margin-bottom: 8px;
+}
+
+.Top-Info > img {
+    width: 600px;
+    height: 600px;
+}
+
+.Top-Top-Info{
+    display: flex;
+    justify-content: space-between;
+}
+
+.Review-Info {
+    display: flex;
+}
+
+.Review-Info > * {
+    margin: 0px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.Review-Info > p {
+    font-size: 24px;
+    color: rgb(50, 50, 50);
+}
+
+.Review-Info > a {
+    font-size: 20px;
+    padding-top: 4px;
+    color:rgb(50, 50, 50)
+}
