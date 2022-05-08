@@ -8,7 +8,7 @@ const Candy = () =>{
   const {currentUser} = useContext(AuthContext);
   const [candyInfo, setCandyInfo] = useState(undefined)
   const [candyHave, setCandyHave] = useState(0)
-  const [candyStock, setCnadyStock] = useState(0)
+  const [candyStock, setCandyStock] = useState(0)
   const params = useParams();
   const intn = /^\+?[1-9][0-9]*$/;
 
@@ -21,7 +21,7 @@ const Candy = () =>{
         let candyId = params.id
         const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
         setCandyInfo(data);
-        setCnadyStock(data.stock)
+        setCandyStock(data.stock)
 
         if(currentUser !== null){
           const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
@@ -93,6 +93,7 @@ const Candy = () =>{
       alert(e);
     }
   }
+
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
     let numberha1 = Number(numberha)
@@ -112,17 +113,17 @@ const Candy = () =>{
     else{
       let total = numberha1 + candyHave
       const body = {id: params.id, name : candyInfo.name, price: candyInfo.price, image:candyInfo.image, numbers:total}
-      const updateInfomation = {id:params.id, newStockNumber: newStock}
+      const updateInformation = {id:params.id, newStockNumber: newStock}
       try{
         await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
         .then(res=>{
           setCandyHave(res.data.numbers)
-          setCnadyStock(newStock)
+          setCandyStock(newStock)
           console.log(newStock)
           console.log(res)
         })
         alert(`You successfully purchased ${numberha1} units`)
-        await axios.post('http://localhost:4000/Candies/updateStock', updateInfomation).then(res=>{})
+        await axios.post('http://localhost:4000/Candies/updateStock', updateInformation)
       }
       catch(e){
         alert(e)

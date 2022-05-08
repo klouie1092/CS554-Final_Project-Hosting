@@ -32,7 +32,7 @@ const useStyles = makeStyles({
     },
     grid: {
       flexGrow: 1,
-      flexDirection: 'row'
+      flexDirection: 'row',
     },
     media: {
       height: '100%',
@@ -113,9 +113,9 @@ function ShoppingCart() {
         }
         let numberha = document.getElementById(id).value
         let numberha1 = Number(numberha)
-        console.log(numberha1)
-        console.log(number)
-        console.log(data1.stock)
+        //console.log(numberha1)
+        //console.log(number)
+        //console.log(data1.stock)
 
         if (isNaN(numberha1) || isNaN(numberha1) || isNaN(numberha1)){
           alert('input must be number')
@@ -132,46 +132,48 @@ function ShoppingCart() {
 
 
         else{
-          const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
-          if(numberha1 > number){
-            newCandyStock = data1.stock - (numberha1 - number)
-            console.log(newCandyStock)
+            const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
+            if(numberha1 > number){
+                newCandyStock = data1.stock - (numberha1 - number)
+                //console.log('newCandyStock', newCandyStock)
             }
             else if(numberha1 < number){
                 newCandyStock = data1.stock - (numberha1 - number)
-                console.log(newCandyStock)
             }
-            const updateInfomation = {id:id, newStockNumber: newCandyStock}
+            else{
+                alert(`You already have ${number} units in your cart, you can only edit to change the value`)
+                return;
+            }
+            const updateInformation = {id:id, newStockNumber: newCandyStock}
 
-          try{
-            
-            await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
-            .then(res=>{
-                let olddata = shopcart
-                //let num 
-                //console.log(res)
-                let changeData = olddata.map((e, ind) => {
-                    //if (e.id === res.id){
-                      //num = ind
-                    return e.id === res.data.id? res.data:e;
-                    //}
+            try{
+                
+                await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+                .then(res=>{
+                    let olddata = shopcart
+                    //let num 
+                    //console.log(res)
+                    let changeData = olddata.map((e, ind) => {
+                        //if (e.id === res.id){
+                        //num = ind
+                        return e.id === res.data.id? res.data:e;
+                        //}
+                    })
+                    // olddata.splice(num,1)
+                    // olddata.push
+                    // console.log(res)
+                    //console.log(changeData)
+                    setShopcartData(changeData)
+                    //console.log(changeData)
                 })
-                // olddata.splice(num,1)
-                // olddata.push
-                // console.log(res)
-                //console.log(changeData)
-                setShopcartData(changeData)
-                //console.log(changeData)
-            })
-            console.log(updateInfomation)
-            await axios.post('http://localhost:4000/Candies/updateStock', updateInfomation).then(res=>{})
-            alert('you Edit it to shopping cart')
-          }
-          catch(e){
-            alert(e)
-          }
-          
-          document.getElementById(id).value = ''
+                await axios.post('http://localhost:4000/Candies/updateStock', updateInformation).then(res=>{})
+                alert('you Edit it to shopping cart')
+            }
+            catch(e){
+                alert(e)
+            }
+            
+            document.getElementById(id).value = ''
         }
     };
     const clearShopCart = async (shopcart) => {
@@ -183,7 +185,7 @@ function ShoppingCart() {
     }
     const buildCards = (candy) =>{
         return(
-            <Grid item xs={12} sm={12} md={4} lg={3} xl={12} key={candy.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={12} key={candy.id}>
                 <Card className={classes.card} variant='outlined'>
                     <CardActionArea>
                         <Link to={`/Candy/${candy.id}`}>
@@ -204,17 +206,17 @@ function ShoppingCart() {
                                 </Typography>   
                             </CardContent>
                         </Link>
+                        <h2>You have {candy.numbers} {candy.name} in your shopping cart</h2>
+                        <label>
+                            <input
+                                id={candy.id}
+                                name='number'
+                                placeholder='Change amount'
+                            />
+                        </label>
+                        <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Quantity</Button>
+                        <Button onClick={()=>deleteC(candy.id, candy.numbers)}>Delete this candy</Button>
                     </CardActionArea>
-                    <h2>You have {candy.numbers} {candy.name} in your shopping cart</h2>
-                    <label>
-                        <input
-                            id={candy.id}
-                            name='number'
-                            placeholder='number that you want to add'
-                        />
-                    </label>
-                    <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Candy</Button>
-                    <Button onClick={()=>deleteC(candy.id, candy.numbers)}>Delete this candy</Button>
                 </Card>
             </Grid>
         );
