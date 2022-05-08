@@ -126,6 +126,22 @@ const CandyList = () =>{
   //   </div>
   // )  
 
+  let returnVal = candyData&&candyData.filter(candy =>{
+    if(searchTerm === '' && filteCandy === ''){
+      return true;
+    }
+    if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && filteCandy === ''){
+      return true;
+    }
+    if(parseInt(filteCandy) < candy.rating && searchTerm === ''){
+      return true;
+    }
+    if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && parseInt(filteCandy) < candy.rating){
+      return true;
+    }
+    return false
+  });
+
   return(
     <div>
       {/*<input placeholder="Search For Candies" onChange={event => setSearchTerm(event.target.value)} /> */}
@@ -145,25 +161,13 @@ const CandyList = () =>{
       <br />
       <br />
       <br />
-      <Grid container className={classes.grid} spacing={5}>
         {
-          candyData && candyData.filter(candy =>{
-            if(searchTerm === '' && filteCandy === ''){
-              return true;
-            }
-            if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && filteCandy === ''){
-              return true;
-            }
-            if(parseInt(filteCandy) < candy.rating && searchTerm === ''){
-              return true;
-            }
-            if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && parseInt(filteCandy) < candy.rating){
-              return true;
-            }
-            return false
-          }).map((candy) =>(buildCards(candy)))
+          returnVal&&returnVal.length > 0 ? 
+            <Grid container className={classes.grid} spacing={5}>
+              {returnVal.map((candy) =>(buildCards(candy)))}
+            </Grid> :
+            <p>No Results</p>
         }
-      </Grid>
     </div>
   );
 };
