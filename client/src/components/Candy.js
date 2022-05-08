@@ -8,6 +8,7 @@ const Candy = () =>{
   const {currentUser} = useContext(AuthContext);
   const [candyInfo, setCandyInfo] = useState(undefined)
   const [candyHave, setCandyHave] = useState(0)
+  const [candyStock, setCnadyStock] = useState(0)
   const params = useParams();
   const intn = /^\+?[1-9][0-9]*$/;
 
@@ -20,6 +21,7 @@ const Candy = () =>{
         let candyId = params.id
         const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
         setCandyInfo(data);
+        setCnadyStock(data.stock)
 
         if(currentUser !== null){
           const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
@@ -28,12 +30,14 @@ const Candy = () =>{
               return [0]
             }
           })
-          //console.log(changeData[0].numbers)
+          // console.log(changeData)
           if(changeData[0].numbers){
             //console.log('aaa')
             setCandyHave(changeData[0].numbers)
             //console.log(candyHave)
           }
+
+          
           console.log(candyHave)
         }
       } catch (e) {
@@ -94,6 +98,7 @@ const Candy = () =>{
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
     let numberha1 = Number(numberha)
+    let newStock = candyStock - numberha1
     if (isNaN(numberha1) || isNaN(numberha1) || isNaN(numberha1)){
       alert('input must be number')
       document.getElementById('number').value = ''
@@ -101,7 +106,7 @@ const Candy = () =>{
     else if(intn.test(numberha) === false){
       alert('input must be integer')
       document.getElementById('number').value = ''
-    }
+    } 
     else if (numberha1 > candyInfo.stock){
       alert('input must less than candy left')
       document.getElementById('number').value = ''
@@ -109,13 +114,17 @@ const Candy = () =>{
     else{
       let total = numberha1 + candyHave
       const body = {id: params.id, name : candyInfo.name, price: candyInfo.price, image:candyInfo.image, numbers:total}
+      const updateInfomation = {id:params.id, newStockNumber: newStock}
       try{
         const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
         .then(res=>{
           setCandyHave(res.data.numbers)
+          setCnadyStock(newStock)
+          console.log(newStock)
           console.log(res)
         })
         alert(`You successfully purchased ${numberha1} units`)
+        await axios.post('http://localhost:4000/Candies/updateStock', updateInfomation).then(res=>{})
       }
       catch(e){
         alert(e)
@@ -195,7 +204,7 @@ const Candy = () =>{
               </div>)}
               {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
               {!currentUser&&(<h6> login for add candy to shopping cart</h6>)}
-              <h3>There is {candyInfo&&candyInfo.stock} left in stock</h3>
+              <h3>There is {candyStock} left in stock</h3>
               <h5>{candyInfo&&candyInfo.descrption}</h5>
             </div>
           </div>
@@ -226,7 +235,7 @@ const Candy = () =>{
         <br />
         <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
         <br />
-        <h3>There is {candyInfo&&candyInfo.stock} left</h3>
+        <h3>There is {candyStock} left</h3>
         <br />
         <h4>{candyInfo&&candyInfo.manufacturer}</h4>
         <h5>{candyInfo&&candyInfo.descrption}</h5>

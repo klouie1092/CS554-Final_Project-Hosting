@@ -49,6 +49,47 @@ async function getByRating(rate){
     return search
 }
 
+async function updateStock(id,takenNumber){
+    if (!id) throw '[data]Id parameter must be supplied';
+    if (typeof (id) !== 'string') throw "[data]Id must be a string";
+    if (id.trim().length === 0) throw "[data] the input include all space"
+    if(!takenNumber)throw '[data] stock number must provide'
+    if(typeof(takenNumber) !== 'number') throw '[data]Provide type must be a number'
+    const candyDataCollection = await CandyDataInfo();
+    const search = await candyDataCollection.findOne({ _id: ObjectId(id) });
+    if (search === null) throw "no candy fit with this name";
+    const newStock = {
+        stock: takenNumber
+    }
+    const updateInfo = await candyDataCollection.updateOne({_id: ObjectId(id)}, {$set: newStock})
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount )throw 'Update failed';
+
+    return {updateSuccess: true}
+
+}
+
+async function updateStock_delete(id,takenNumber){
+    if (!id) throw '[data]Id parameter must be supplied';
+    if (typeof (id) !== 'string') throw "[data]Id must be a string";
+    if (id.trim().length === 0) throw "[data] the input include all space"
+    if(!takenNumber)throw '[data] stock number must provide'
+    if(typeof(takenNumber) !== 'number') throw '[data]Provide type must be a number'
+    const candyDataCollection = await CandyDataInfo();
+    const search = await candyDataCollection.findOne({ _id: ObjectId(id) });
+    if (search === null) throw "no candy fit with this name";
+
+
+    let deletedStock = search.stock + takenNumber
+    const newStock = {
+        stock: deletedStock
+    }
+    const updateInfo = await candyDataCollection.updateOne({_id: ObjectId(id)}, {$set: newStock})
+    if (!updateInfo.matchedCount && !updateInfo.modifiedCount )throw 'Update failed';
+
+    return {updateSuccess: true}
+
+}
+
 async function addNewRating(id, rating){
     if (!id) throw 'You must provide an id to search for';
     if (typeof(id) != 'string' || id.trim() === '') throw 'not a valid id';
@@ -123,5 +164,7 @@ module.exports = {
     getByName,
     getByRating,
     addNewRating,
-    changeRating
+    changeRating,
+    updateStock_delete,
+    updateStock
 }
