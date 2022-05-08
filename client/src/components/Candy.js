@@ -26,9 +26,7 @@ const Candy = () =>{
         if(currentUser !== null){
           const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
           let changeData = await have.data.filter((e) => {
-            if (e.id === candyId){
-              return [0]
-            }
+            return e.id === candyId
           })
           // console.log(changeData)
           if(changeData[0].numbers){
@@ -45,7 +43,7 @@ const Candy = () =>{
       }
     }
     fetchData();
-  }, []);
+  }, [candyHave, currentUser, params.id]);
 
   const reviewCandy = async () =>{
     let rating = document.getElementById('rating').value;
@@ -55,15 +53,17 @@ const Candy = () =>{
     }
     if(review.trim(' ').length === 0) review = " ";
     let email = currentUser.email;
-    let candyId = candyInfo._id;
+    //let candyId = candyInfo._id;
     
     try{
+      /*
       let newReview = await axios.post('http://localhost:4000/review',{
         candyId: candyId,
         email: email,
         review: review,
         rating: rating
       });
+      */
       let reviewDiv =document.getElementById('newReview');
       reviewDiv.style.display = "none";
       if(review.trim(' ').length!==0){
@@ -116,7 +116,7 @@ const Candy = () =>{
       const body = {id: params.id, name : candyInfo.name, price: candyInfo.price, image:candyInfo.image, numbers:total}
       const updateInfomation = {id:params.id, newStockNumber: newStock}
       try{
-        const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+        await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
         .then(res=>{
           setCandyHave(res.data.numbers)
           setCnadyStock(newStock)
@@ -143,11 +143,11 @@ const Candy = () =>{
     let content = [];
     for (let i = 0; i < 5; i++) {
       if (rating - i === .5) {
-        content.push(<i class="fa fa-star-half-full checked"/>);
+        content.push(<i className="fa fa-star-half-full checked"/>);
       } else if (rating - i > 0) {
-        content.push(<i class="fa fa-star checked"/>);
+        content.push(<i className="fa fa-star checked"/>);
       } else {
-        content.push(<i class="fa fa-star-o checked"/>);
+        content.push(<i className="fa fa-star-o checked"/>);
       }
     }
     return content;
@@ -177,11 +177,11 @@ const Candy = () =>{
     return(
       <div className='Candy-body'>
         <div className='Top-Info'>
-          <img src = {candyInfo.image} alt = "Candy image" />
+          <img src = {candyInfo.image} alt = "Candy" />
           <div className='Right-Top'>
             <div className='Top-Top-Info'>
               <p><u>{candyInfo&&candyInfo.manufacturer}</u></p>
-              {candyInfo.vegan&&<img src = {veganCheck} width={40} height={40}></img>}
+              {candyInfo.vegan&&<img src = {veganCheck} width={40} height={40} alt='veganCheck'/>}
             </div>
             <h1>{candyInfo&&candyInfo.name}</h1>
             <div className='Review-Info'>
@@ -229,7 +229,7 @@ const Candy = () =>{
   else{
     return(
       <div className='Candy-body'>
-        <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy image" />
+        <img src = {candyInfo.image} width= {400} height = {400} alt = "Candy" />
         <h1>{candyInfo&&candyInfo.name}</h1>
         <h2>{makeStarRating(candyInfo.rating)}</h2>
         <br />

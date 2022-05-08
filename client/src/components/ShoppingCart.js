@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect}  from 'react';
 import { AuthContext } from '../firebase/Auth';
 import axios from 'axios';
-import {useParams, Link } from "react-router-dom";
+import {Link } from "react-router-dom";
 import createPDF from './CreatePDF'
 import {
     Card,
@@ -75,17 +75,16 @@ function ShoppingCart() {
         }
         fetchData();
 
-    }, []);
+    }, [currentUser.email]);
     const deleteC = async(id, candyNumber) =>{        
         try{
-            //console.log(id)
-            const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } })
+            await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } })
             .then(res=>{
                 let olddata = shopcart
                 console.log(shopcart)
                 //let num 
                 let changeData = olddata.filter((e, ind) => {
-                    return e.id != res.data.id;
+                    return e.id !== res.data.id;
                 })
                 console.log(changeData)
                 // olddata.splice(num,1)
@@ -94,7 +93,7 @@ function ShoppingCart() {
                 setShopcartData(changeData)
             })
             const updateInfomation = {id:id, newStockNumber: candyNumber}
-            const updateDatabase = await axios.post('http://localhost:4000/Candies/stockDelete', updateInfomation)
+            await axios.post('http://localhost:4000/Candies/stockDelete', updateInfomation)
             alert("successful delete the candy")
         }
         catch(e){
@@ -146,7 +145,7 @@ function ShoppingCart() {
 
           try{
             
-            const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+            await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
             .then(res=>{
                 let olddata = shopcart
                 //let num 
@@ -165,7 +164,7 @@ function ShoppingCart() {
                 //console.log(changeData)
             })
             console.log(updateInfomation)
-            const update = await axios.post('http://localhost:4000/Candies/updateStock', updateInfomation).then(res=>{})
+            await axios.post('http://localhost:4000/Candies/updateStock', updateInfomation).then(res=>{})
             alert('you Edit it to shopping cart')
           }
           catch(e){
@@ -175,10 +174,11 @@ function ShoppingCart() {
           document.getElementById(id).value = ''
         }
     };
-    const clearShopCart = async () => {
+    const clearShopCart = async (shopcart) => {
         //Deletes the shopping cart
-        const clearData = await axios.delete(`http://localhost:4000/usershopcart/${currentUser.email}`)
+        await axios.delete(`http://localhost:4000/usershopcart/${currentUser.email}`)
         alert('thank you for your purchase')
+        createPDF(shopcart)
         window.location.reload(false)
     }
     const buildCards = (candy) =>{
@@ -270,8 +270,7 @@ function ShoppingCart() {
                         <input type="text"/>
                         <br/>
                     </form>
-                    <button onClick={() => clearShopCart()} hidden={!showForm}>Check Out</button>
-                    <button onClick={() => createPDF(shopcart)} hidden={!showForm} target="_blank">Generate Receipt</button>
+                <button onClick={() => clearShopCart(shopcart)} hidden={!showForm}>Check Out</button>
             </div>
             );
         }

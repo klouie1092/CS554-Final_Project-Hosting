@@ -14,12 +14,11 @@ const createPDF = shopcart => {
         rows.push([candy.name, candy.numbers, candy.price, candy.numbers * candy.price])
     })
 
-    doc.autoTable(columns, rows, {startY: 20});
+    doc.autoTable({columns:columns, body:rows});
     const date = Date().split(" ");
 
     const dateStr = date[0] + date[1] + date[2] + date[3] + date[4]
     doc.save(`report_${dateStr}.pdf`)
-    window.open('http://localhost:3000/shoppingcart')
 }   
 
 export default createPDF

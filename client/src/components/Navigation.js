@@ -1,7 +1,6 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext} from 'react';
 import {NavLink} from 'react-router-dom';
 import { AuthContext } from '../firebase/Auth';
-import SignOutButton from './SignOut';
 import '../App.css';
 
 const logo = 'https://see.fontimg.com/api/renderfont4/X3WjK/eyJyIjoiZnMiLCJoIjo2NSwidyI6MTI1MCwiZnMiOjUyLCJmZ2MiOiIjRkZGRUZFIiwiYmdjIjoiI0RCMzAzMCIsInQiOjF9/R3JvdXAgTnVsbA/uncracked-free-trial.png'
@@ -19,24 +18,24 @@ const Navigation = () => {
   
   const NavigationAuth = () => {
     return (
-      <nav class='navigation'>
-        <NavLink class='weblink' to='/'>
+      <nav className='navigation'>
+        <NavLink className='weblink' to='/'>
           <img src={logo} alt='logo failed to load'/>
         </NavLink>
         <div className='searchBar'>
-          <NavLink class='weblink' to='/candies'>
-            <input class='allButton' type="submit" value="All"/>
+          <NavLink className='weblink' to='/candies'>
+            <input className='allButton' type="submit" value="All"/>
           </NavLink>
-          <form class="searchForm" onSubmit={handleSubmit}>
+          <form className="searchForm" onSubmit={handleSubmit}>
             <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
-            <button type="submit"><i class="fa fa-search"></i></button>
+            <button type="submit"><i className="fa fa-search"></i></button>
           </form>
         </div>
         <NavLink className='weblink' to='/account'>
-          <i class="fa fa-user-circle" aria-hidden="true">Account</i>
+          <i className="fa fa-user-circle" aria-hidden="true">Account</i>
         </NavLink>
         <NavLink className='weblink' to='/shoppingcart'> 
-          <i class="fa fa-shopping-cart" aria-hidden="true">My Cart</i>
+          <i className="fa fa-shopping-cart" aria-hidden="true">My Cart</i>
         </NavLink>
       </nav>
     );
@@ -49,12 +48,12 @@ const Navigation = () => {
           <img src={logo} alt='logo failed to load'/>
         </NavLink>
         <div className='searchBar'>
-          <NavLink class='weblink' to='/candies'>
-            <input class='allButton' type="submit" value="All"/>
+          <NavLink className='weblink' to='/candies'>
+            <input className='allButton' type="submit" value="All"/>
           </NavLink>
-          <form class="searchForm" onSubmit={handleSubmit}>
+          <form className="searchForm" onSubmit={handleSubmit}>
             <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
-            <button type="submit"><i class="fa fa-search"></i></button>
+            <button type="submit"><i className="fa fa-search"></i></button>
           </form>
         </div>
         <NavLink className='weblink' to='/signup'> 

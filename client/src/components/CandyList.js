@@ -83,11 +83,11 @@ const useStyles = makeStyles({
       let content = [];
       for (let i = 0; i < 5; i++) {
         if (rating - i === .5) {
-          content.push(<i class="fa fa-star-half-full checked"/>);
+          content.push(<i className="fa fa-star-half-full checked"/>);
         } else if (rating - i > 0) {
-          content.push(<i class="fa fa-star checked"/>);
+          content.push(<i className="fa fa-star checked"/>);
         } else {
-          content.push(<i class="fa fa-star-o checked"/>);
+          content.push(<i className="fa fa-star-o checked"/>);
         }
       }
       return content;
@@ -162,18 +162,18 @@ const useStyles = makeStyles({
           {
             candyData && candyData.filter(candy =>{
               if(searchTerm === '' && filteCandy === ''){
-                return candy;
+                return true;
               }
               if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && filteCandy === ''){
-                return candy;
+                return true;
               }
               if(parseInt(filteCandy) < candy.rating && searchTerm === ''){
-                return candy;
+                return true;
               }
               if(candy.name.toLowerCase().includes(searchTerm.toLowerCase()) && parseInt(filteCandy) < candy.rating){
-                return candy;
+                return true;
               }
-
+              return false
             }).map((candy) =>(buildCards(candy)))
           }
         </Grid>
