@@ -210,8 +210,8 @@ const Candy = () =>{
           </div>
         </div>
 
-        <div id="newReview">
-          {currentUser&&!reviewed&&(<div className='review-input'>
+        {!reviewed&&currentUser&&(<div id="newReview">
+          <div className='review-input'>
             <h3>Review this product</h3>
             <div class="star-rating">
               <input type="radio" name="stars" id="star-a" value="5" onClick={() => changeRating(5)}/>
@@ -238,9 +238,9 @@ const Candy = () =>{
                   placeholder='Write a review on this product...'
                 />
               </label>
-            </div>)}
-          {currentUser&&(<button onClick={reviewCandy}> Write Review</button>)}
-        </div>
+            </div>
+          <button onClick={reviewCandy}> Write Review</button>
+        </div>)}
         
         <h6>Reviews: </h6>
         <ul id="reviewList">
