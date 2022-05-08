@@ -28,11 +28,9 @@ const Candy = () =>{
           let changeData = await have.data.filter((e) => {
             return e.id === candyId
           })
-          // console.log(changeData)
-          if(changeData[0].numbers){
-            //console.log('aaa')
+          //console.log(changeData)
+          if(changeData.length !== 0 && changeData[0].numbers){
             setCandyHave(changeData[0].numbers)
-            //console.log(candyHave)
           }
 
           
@@ -143,11 +141,11 @@ const Candy = () =>{
     let content = [];
     for (let i = 0; i < 5; i++) {
       if (rating - i === .5) {
-        content.push(<i className="fa fa-star-half-full checked"/>);
+        content.push(<i className="fa fa-star-half-full checked" key={`star${i}`}/>);
       } else if (rating - i > 0) {
-        content.push(<i className="fa fa-star checked"/>);
+        content.push(<i className="fa fa-star checked" key={`star${i}`}/>);
       } else {
-        content.push(<i className="fa fa-star-o checked"/>);
+        content.push(<i className="fa fa-star-o checked" key={`star${i}`}/>);
       }
     }
     return content;
@@ -281,8 +279,8 @@ const Candy = () =>{
       </div>
           <h6>Reviews: </h6>
           <ul id ="reviewList">
-              {notBlank.map(e=>
-              <li>
+              {notBlank.map((e,index)=>
+              <li key={`entry${index}`}>
               <p>Review by {e.email}  on {e.date}</p>
              
               <p>Rating: {e.rating}</p>

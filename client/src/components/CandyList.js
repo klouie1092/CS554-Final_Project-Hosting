@@ -83,11 +83,11 @@ const useStyles = makeStyles({
       let content = [];
       for (let i = 0; i < 5; i++) {
         if (rating - i === .5) {
-          content.push(<i className="fa fa-star-half-full checked"/>);
+          content.push(<i className="fa fa-star-half-full checked" key={`star${i}`}/>);
         } else if (rating - i > 0) {
-          content.push(<i className="fa fa-star checked"/>);
+          content.push(<i className="fa fa-star checked" key={`star${i}`}/>);
         } else {
-          content.push(<i className="fa fa-star-o checked"/>);
+          content.push(<i className="fa fa-star-o checked" key={`star${i}`}/>);
         }
       }
       return content;
