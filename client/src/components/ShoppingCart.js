@@ -76,7 +76,7 @@ function ShoppingCart() {
         fetchData();
 
     }, []);
-    const deleteC = async(id) =>{
+    const deleteC = async(id, candyNumber) =>{        
         try{
             //console.log(id)
             const dele = await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } })
@@ -93,6 +93,8 @@ function ShoppingCart() {
                 // console.log(olddata)
                 setShopcartData(changeData)
             })
+            const updateInfomation = {id:id, newStockNumber: candyNumber}
+            const updateDatabase = await axios.post('http://localhost:4000/Candies/stockDelete', updateInfomation)
             alert("successful delete the candy")
         }
         catch(e){
@@ -101,6 +103,7 @@ function ShoppingCart() {
 	}
     const changeCandy = async (id,name, price, image, number) => {
         let data1
+        let newCandyStock
         try{
             const {data} = await axios.get('http://localhost:4000/Candy/' + id);
             data1 = data
@@ -111,6 +114,10 @@ function ShoppingCart() {
         }
         let numberha = document.getElementById(id).value
         let numberha1 = Number(numberha)
+        console.log(numberha1)
+        console.log(number)
+        console.log(data1.stock)
+
         if (isNaN(numberha1) || isNaN(numberha1) || isNaN(numberha1)){
           alert('input must be number')
           document.getElementById(id).value = ''
@@ -123,9 +130,22 @@ function ShoppingCart() {
           alert('input must less than candy left')
           document.getElementById(id).value = ''
         }
+
+
         else{
           const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
+          if(numberha1 > number){
+            newCandyStock = data1.stock - (numberha1 - number)
+            console.log(newCandyStock)
+            }
+            else if(numberha1 < number){
+                newCandyStock = data1.stock - (numberha1 - number)
+                console.log(newCandyStock)
+            }
+            const updateInfomation = {id:id, newStockNumber: newCandyStock}
+
           try{
+            
             const setdata = await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
             .then(res=>{
                 let olddata = shopcart
@@ -144,6 +164,8 @@ function ShoppingCart() {
                 setShopcartData(changeData)
                 //console.log(changeData)
             })
+            console.log(updateInfomation)
+            const update = await axios.post('http://localhost:4000/Candies/updateStock', updateInfomation).then(res=>{})
             alert('you Edit it to shopping cart')
           }
           catch(e){
@@ -192,7 +214,7 @@ function ShoppingCart() {
                         />
                     </label>
                     <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Candy</Button>
-                    <Button onClick={()=>deleteC(candy.id)}>Delete this candy</Button>
+                    <Button onClick={()=>deleteC(candy.id, candy.numbers)}>Delete this candy</Button>
                 </Card>
             </Grid>
         );

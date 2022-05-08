@@ -62,6 +62,70 @@ router.post('/Candy/searchByName', async (req,res) =>{
     }
 });
 
+router.post('/Candies/updateStock', async (req,res) =>{
+    let candyId = req.body.id;
+    let stockNumber = req.body.newStockNumber;
+    console.log(candyId)
+    console.log(stockNumber)
+    console.log(typeof(stockNumber))
+    if(!candyId){
+        res.status(400).json({error: '[candy Routes] id is not provided'})
+    }
+    if(typeof(candyId) !== 'string'){
+        res.status(400).json({error: '[candy Routes] candy id type is not string'})
+    }
+    if(candyId.trim().length ===0){
+        res.status(400).json({error: '[candy Routes] candy id can not be all space'})
+    }
+    if(!stockNumber){
+        res.status(400).json({error: '[candy Routes] stock number is not provided'})
+    }
+    if(typeof(stockNumber) !== 'number'){
+        res.status(400).json({error: '[candy Routes] stock number type is not number'})
+    }   
+    try{
+        const updateStock = await candyData.updateStock(candyId,stockNumber);
+        if(updateStock.updateSuccess === true){
+            res.status(200)
+        }
+    }
+    catch(e){
+        res.status(400).json({ error: e });
+    }
+});
+
+router.post('/Candies/stockDelete', async (req,res) =>{
+    let candyId = req.body.id;
+    let stockNumber = req.body.newStockNumber;
+
+    if(!candyId){
+        res.status(400).json({error: '[candy Routes] id is not provided'})
+    }
+    if(typeof(candyId) !== 'string'){
+        res.status(400).json({error: '[candy Routes] candy id type is not string'})
+    }
+    if(candyId.trim().length ===0){
+        res.status(400).json({error: '[candy Routes] candy id can not be all space'})
+    }
+    if(!stockNumber){
+        res.status(400).json({error: '[candy Routes] stock number is not provided'})
+    }
+    if(typeof(stockNumber) !== 'number'){
+        res.status(400).json({error: '[candy Routes] stock number type is not number'})
+    }   
+    try{
+        const updateStock = await candyData.updateStock_delete(candyId,stockNumber);
+        if(updateStock.updateSuccess === true){
+            res.status(200)
+        }
+    }
+    catch(e){
+        res.status(400).json({ error: e });
+    }
+});
+
+
+
 router.post('/Candy/searchByRating', async (req,res) =>{
     let searchRating = req.body;
     if(!searchRating){
