@@ -66,29 +66,29 @@ const Candy = () =>{
       let reviewDiv =document.getElementById('newReview');
       reviewDiv.style.display = "none";
       if(review.trim(' ').length!==0){
-      //document.getElementById('rating').value=''; (no longer need, might need to be setReviewRating(0))
-      document.getElementById('review').value='';
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-      var yyyy = today.getFullYear();
-      today = mm + '/' + dd + '/' + yyyy;
-      
-      let li = document.createElement("user-review");
-      let entry1 = document.createElement("p")
-      let text1 = document.createTextNode("Review by " + email + "  on " + today)
-      let entry2 = document.createElement("p")
-      let text2 = document.createTextNode("Rating " + rating)
-      let entry3 = document.createElement("p")
-      let text3 = document.createTextNode("Review: " + review)
-      entry1.appendChild(text1)
-      entry2.appendChild(text2)
-      entry3.appendChild(text3)
-      li.appendChild(entry1)
-      li.appendChild(entry2)
-      li.appendChild(entry3)
-      let ul= document.getElementById('reviewList')
-      ul.appendChild(li)
+        //document.getElementById('rating').value=''; (no longer need, might need to be setReviewRating(0))
+        document.getElementById('review').value='';
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+        var yyyy = today.getFullYear();
+        today = mm + '/' + dd + '/' + yyyy;
+        
+        let li = document.createElement("user-review");
+        let entry1 = document.createElement("p")
+        let text1 = document.createTextNode("Review by " + email + "  on " + today)
+        let entry2 = document.createElement("p")
+        let text2 = document.createTextNode("Rating " + rating)
+        let entry3 = document.createElement("p")
+        let text3 = document.createTextNode("Review: " + review)
+        entry1.appendChild(text1)
+        entry2.appendChild(text2)
+        entry3.appendChild(text3)
+        li.appendChild(entry1)
+        li.appendChild(entry2)
+        li.appendChild(entry3)
+        let ul= document.getElementById('reviewList')
+        ul.appendChild(li)
       }
     }catch(e){
       alert(e);
