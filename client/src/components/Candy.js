@@ -27,15 +27,11 @@ const Candy = () =>{
         const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
         setCandyInfo(data);
         setCandyStock(data.stock)
-     
-        
       
-        if(currentUser !== null){
-          
-          
+        if(currentUser !== null){          
           data.reviews.forEach((e)=>{
             if(e.email === currentUser.email) setUserReview(e)
-          })
+          });
           
           const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
           let changeData = await have.data.filter((e) => {
@@ -83,17 +79,18 @@ const Candy = () =>{
       var yyyy = today.getFullYear();
       today = mm + '/' + dd + '/' + yyyy;
       let  newReview = {
-          candyId: candyId,
+        candyId: candyId,
         email: email,
         review: review,
         rating: rating,
         date: today
-        }
+      }
       setUserReview(newReview);
     }catch(e){
       alert(e);
     }
   }
+
   const deleteReview = async()=>{
     try{
 
@@ -103,11 +100,11 @@ const Candy = () =>{
       });
       
       setUserReview(undefined);
+      setReviewRating(0);
+    } catch(e){
+      alert(e);
+    }
   }
-      catch(e){
-        alert(e);
-  }
-}
 
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
@@ -189,118 +186,113 @@ const Candy = () =>{
       )
     }
     else{
-     
-      let notBlank= [];
-        
-        candyInfo.reviews.forEach((e)=>{
-          if(currentUser){
-            if(e.email !== currentUser.email){
-              if(e.review.trim(' ').length!==0) notBlank.push(e);
+      let notBlank= [];   
+      candyInfo.reviews.forEach((e)=>{
+        if(currentUser){
+          if(e.email !== currentUser.email){
+            if(e.review.trim(' ').length!==0) notBlank.push(e);
           } 
         }
         else{
-        if(e.review.trim(' ').length!==0) notBlank.push(e);
+          if(e.review.trim(' ').length!==0) notBlank.push(e);
         } 
-       });
-       
+      });    
  
-  if(true){
-    return(
-      <div className='Candy-body'>
-        <div className='Top-Info'>
-          <img src = {candyInfo.image} alt = "Candy" />
-          <div className='Right-Top'>
-            <div className='Top-Top-Info'>
-              <p><u>{candyInfo&&candyInfo.manufacturer}</u></p>
-              {candyInfo.vegan&&<img src = {veganCheck} width={40} height={40} alt='veganCheck'/>}
-            </div>
-            <h1>{candyInfo&&candyInfo.name}</h1>
-            <div className='Review-Info'>
-              <h2>{makeStarRating(candyInfo.rating)}</h2>
-              <p>({candyInfo.rating.toFixed(1)})</p>
-              <a className='numReviews' href='#reviews'>{candyInfo.numRatings} {candyInfo.numRatings > 1? 'Ratings' : 'Rating'}</a>
-            </div>
-            <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
-            <div className='add'>
-              {currentUser&&(<div className='input-selection'>
-                <p>You currently have {candyHave} units:</p>
-                <label>
-                  Purchase more:
-                  <input
-                    id='number'
-                    name='number'
-                    placeholder='quantity'
-                  />
-                </label>
-              </div>)}
-              {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
-              {!currentUser&&(<p> Must be logged in to add candy to shopping cart</p>)}
-              <h3>There is {candyStock} left in stock</h3>
-              <p>{candyInfo&&candyInfo.descrption}</p>
+      return(
+        <div className='Candy-body'>
+          <div className='Top-Info'>
+            <img src = {candyInfo.image} alt = "Candy" />
+            <div className='Right-Top'>
+              <div className='Top-Top-Info'>
+                <p><u>{candyInfo&&candyInfo.manufacturer}</u></p>
+                {candyInfo.vegan&&<img src = {veganCheck} width={40} height={40} alt='veganCheck'/>}
+              </div>
+              <h1>{candyInfo&&candyInfo.name}</h1>
+              <div className='Review-Info'>
+                <h2>{makeStarRating(candyInfo.rating)}</h2>
+                <p>({candyInfo.rating.toFixed(1)})</p>
+                <a className='numReviews' href='#reviews'>{candyInfo.numRatings} {candyInfo.numRatings > 1? 'Ratings' : 'Rating'}</a>
+              </div>
+              <h2>Price: ${candyInfo&&candyInfo.price.toFixed(2)}</h2>
+              <div className='add'>
+                {currentUser&&(<div className='input-selection'>
+                  <p>You currently have {candyHave} units:</p>
+                  <label>
+                    Purchase more:
+                    <input
+                      id='number'
+                      name='number'
+                      placeholder='quantity'
+                    />
+                  </label>
+                </div>)}
+                {currentUser&&(<button onClick={changeCandy}> add to cart</button>)}
+                {!currentUser&&(<p> Must be logged in to add candy to shopping cart</p>)}
+                <h3>There is {candyStock} left in stock</h3>
+                <p>{candyInfo&&candyInfo.descrption}</p>
+              </div>
             </div>
           </div>
+
+          {!userReview&&currentUser&&(<div id="newReview">
+            <div className='review-input'>
+              <h3>Review this product</h3>
+              <div className="star-rating">
+                <input type="radio" name="stars" id="star-a" value="5" onClick={() => changeRating(5)}/>
+                <label htmlFor="star-a"></label>
+
+                <input type="radio" name="stars" id="star-b" value="4" onClick={() => changeRating(4)}/>
+                <label htmlFor="star-b"></label>
+            
+                <input type="radio" name="stars" id="star-c" value="3" onClick={() => changeRating(3)}/>
+                <label htmlFor="star-c"></label>
+            
+                <input type="radio" name="stars" id="star-d" value="2" onClick={() => changeRating(2)}/>
+                <label htmlFor="star-d"></label>
+            
+                <input type="radio" name="stars" id="star-e" value="1" onClick={() => changeRating(1)}/>
+                <label htmlFor="star-e"></label>
+              </div>
+                <label htmlFor ="review">
+                  Write a new Review:
+                  <textarea
+                    cols="40" rows="5"
+                    id='review'
+                    name='review'
+                    placeholder='Write a review on this product...'
+                  />
+                </label>
+              </div>
+            <button onClick={reviewCandy}> Write Review</button>
+          </div>)}
+          {userReview&&currentUser&&(<div id="userReview">
+              <h3>Your Review</h3>
+        
+                <p>Review by {userReview.email}  on {userReview.date}</p>
+                
+                <p>{makeStarRating(userReview.rating)}</p>
+                
+                <p>Review: {userReview.review}</p>
+
+                <button onClick={deleteReview}>Delete Review</button>
+              </div>)}
+          <p><b>Reviews: </b></p>
+          <ul id="reviewList">
+            {notBlank.map(e=>
+              <li>
+                <p>Review by {e.email}  on {e.date}</p>
+                
+                <p>{makeStarRating(e.rating)}</p>
+                
+                <p>Review: {e.review}</p>
+              </li>
+            )}
+          </ul>
         </div>
-
-        {!userReview&&currentUser&&(<div id="newReview">
-          <div className='review-input'>
-            <h3>Review this product</h3>
-            <div class="star-rating">
-              <input type="radio" name="stars" id="star-a" value="5" onClick={() => changeRating(5)}/>
-              <label for="star-a"></label>
-
-              <input type="radio" name="stars" id="star-b" value="4" onClick={() => changeRating(4)}/>
-              <label for="star-b"></label>
-          
-              <input type="radio" name="stars" id="star-c" value="3" onClick={() => changeRating(3)}/>
-              <label for="star-c"></label>
-          
-              <input type="radio" name="stars" id="star-d" value="2" onClick={() => changeRating(2)}/>
-              <label for="star-d"></label>
-          
-              <input type="radio" name="stars" id="star-e" value="1" onClick={() => changeRating(1)}/>
-              <label for="star-e"></label>
-            </div>
-              <label htmlFor ="review">
-                Write a new Review:
-                <textarea
-                  cols="40" rows="5"
-                  id='review'
-                  name='review'
-                  placeholder='Write a review on this product...'
-                />
-              </label>
-            </div>
-          <button onClick={reviewCandy}> Write Review</button>
-        </div>)}
-        {userReview&&currentUser&&(<div id="userReview">
-            <h3>Your Review</h3>
-       
-              <p>Review by {userReview.email}  on {userReview.date}</p>
-              
-              <p>{makeStarRating(userReview.rating)}</p>
-              
-              <p>Review: {userReview.review}</p>
-
-              <button onClick={deleteReview}>Delete Review</button>
-            </div>)}
-        <h6>Reviews: </h6>
-        <ul id="reviewList">
-          {notBlank.map(e=>
-            <li>
-              <p>Review by {e.email}  on {e.date}</p>
-              
-              <p>{makeStarRating(e.rating)}</p>
-              
-              <p>Review: {e.review}</p>
-            </li>
-          )}
-        </ul>
-      </div>
-    )
+      )
+    }
   }
 };
-}
-}
 
 
-export default Candy
+export default Candy;
