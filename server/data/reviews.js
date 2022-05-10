@@ -82,6 +82,65 @@ async function createReview(candyId,email,review,rating){
 
 }
 
+async function deleteReview(candyId,email){
+  
+  if(!candyId){
+    throw 'No candy ID was provided'
+  }
+ 
+  if(typeof candyId!='string'){
+    throw 'candy ID must be a string'
+  }
+  if(candyId.length==0){
+    throw 'candy ID cannot be empty'
+  }
+  if(!email){
+    throw 'No email was provided'
+  }
+  if(typeof email!='string'){
+    throw 'email must be a string'
+  }
+  if(email.trim(' ').length===0){
+    throw 'Description cannot contain only whitespaces'
+  }
+    let exists = false;
+    let newReviews = [];
+    try{
+     
+    let candyCollection = await CandyCollection();
+   
+    let candy = await candyCollection.findOne({_id:ObjectId(candyId)});
+    
+    candy.reviews.forEach((review)=>{
+        if(review.email === email){
+          exists = true;
+        }
+        else{
+          newReviews.push(review);
+        }
+    });
+    
+    if(exists ===false) throw "This user has not reviewed this product";
+    let deletedReview = {candyId: candyId,
+      email:email}
+    candy.reviews = newReviews;
+    const updatedInfo = await candyCollection.updateOne(
+      { _id: ObjectId(candyId) },
+      { $set: candy}
+  );
+     
+  
+  if (updatedInfo.modifiedCount === 0) {
+      throw 'could not update candy successfully';
+  }
+
+  return deletedReview;
+}catch(e){
+  console.log("error: " + e)
+}
+}
+
 module.exports = {
-    createReview
+    createReview,
+    deleteReview
 }

@@ -57,5 +57,40 @@ router.post('/',async(req,res)=>{
     }
 })
 
+router.post('/delete',async(req,res)=>{
+    
+    let candyIdRoutes = xss(req.body.candyId);
+    let emailRoutes = xss(req.body.email);
+   
+ 
+    
+    if(!candyIdRoutes){
+        res.status(400).json({error:'No Candy ID was provided'});
+        
+    }
+    if(!emailRoutes){
+        res.status(400).json({error:'No email was provided'});
+        
+    }
+
+      if(typeof emailRoutes!='string'){
+        res.status(400).json({error:'Email provided is not a string'});
+      }
+     
+    if(emailRoutes.trim(' ').length===0){
+        res.status(400).json({error:'Email cannot contain only whitespaces'});
+        
+    }
+  
+    try{
+    const deletingReview = await reviewData.deleteReview(candyIdRoutes,emailRoutes);
+    
+    if(deletingReview){
+        res.json(deletingReview);
+    }
+    }catch(e){
+        res.status(400).json({error:e});
+    }
+})
 
 module.exports = router;

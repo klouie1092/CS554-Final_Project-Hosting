@@ -9,6 +9,10 @@ const Candy = () =>{
   const [candyInfo, setCandyInfo] = useState(undefined)
   const [candyHave, setCandyHave] = useState(0)
   const [candyStock, setCandyStock] = useState(0)
+  const [userReview,setUserReview] = useState(undefined)
+
+
+  const [ loading, setLoading ] = useState(true);
   const params = useParams();
   const intn = /^\+?[1-9][0-9]*$/;
 
@@ -23,16 +27,26 @@ const Candy = () =>{
         const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
         setCandyInfo(data);
         setCandyStock(data.stock)
-
+     
+        
+      
         if(currentUser !== null){
+          
+          
+          data.reviews.forEach((e)=>{
+            if(e.email === currentUser.email) setUserReview(e)
+          })
+          
           const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
           let changeData = await have.data.filter((e) => {
             return e.id === candyId
           })
+          
           if(changeData.length !== 0 && changeData[0].numbers){
             setCandyHave(changeData[0].numbers)
           }
         }
+        setLoading(false);
       } catch (e) {
         console.log(e);
       }
@@ -61,37 +75,39 @@ const Candy = () =>{
         review: review,
         rating: rating
       });
-      let reviewDiv =document.getElementById('newReview');
-      reviewDiv.style.display = "none";
-      if(review.trim(' ').length!==0){
-        //document.getElementById('rating').value=''; (no longer need, might need to be setReviewRating(0))
-        document.getElementById('review').value='';
-        var today = new Date();
-        var dd = String(today.getDate()).padStart(2, '0');
-        var mm = String(today.getMonth() + 1).padStart(2, '0'); 
-        var yyyy = today.getFullYear();
-        today = mm + '/' + dd + '/' + yyyy;
-        
-        let li = document.createElement("user-review");
-        let entry1 = document.createElement("p")
-        let text1 = document.createTextNode("Review by " + email + "  on " + today)
-        let entry2 = document.createElement("p")
-        let text2 = document.createTextNode("Rating " + rating)
-        let entry3 = document.createElement("p")
-        let text3 = document.createTextNode("Review: " + review)
-        entry1.appendChild(text1)
-        entry2.appendChild(text2)
-        entry3.appendChild(text3)
-        li.appendChild(entry1)
-        li.appendChild(entry2)
-        li.appendChild(entry3)
-        let ul= document.getElementById('reviewList')
-        ul.appendChild(li)
-      }
+      
+      document.getElementById('review').value='';
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); 
+      var yyyy = today.getFullYear();
+      today = mm + '/' + dd + '/' + yyyy;
+      let  newReview = {
+          candyId: candyId,
+        email: email,
+        review: review,
+        rating: rating,
+        date: today
+        }
+      setUserReview(newReview);
     }catch(e){
       alert(e);
     }
   }
+  const deleteReview = async()=>{
+    try{
+
+      await axios.post('http://localhost:4000/review/delete',{
+        candyId: candyInfo._id,
+        email: currentUser.email,
+      });
+      
+      setUserReview(undefined);
+  }
+      catch(e){
+        alert(e);
+  }
+}
 
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
@@ -149,29 +165,44 @@ const Candy = () =>{
     return content;
   }
 
+  
   const changeRating = (num) => {
     setReviewRating(num);
   }
 
 
-  if(candyInfo === undefined){
-    return(
-      <div>
-        <h1>Sorry, there is no such candy</h1>
-      </div>
-    )
-  }
-  let notBlank = [];
-  let reviewed = false;
-  candyInfo.reviews.forEach((e)=>{
-    if(currentUser){
-      if(e.email === currentUser.email){
-        reviewed =  true;
-      }
-    }
-    if(e.review.trim(' ').length!==0) notBlank.push(e);
   
-  });
+  
+  if(loading){
+    return (
+			<div>
+				<h2>Loading...</h2>
+			</div>
+		);
+  }
+  else{
+    if(candyInfo === undefined){
+      return(
+        <div>
+          <h1>Sorry, there is no such candy</h1>
+        </div>
+      )
+    }
+    else{
+     
+      let notBlank= [];
+        
+        candyInfo.reviews.forEach((e)=>{
+          if(currentUser){
+            if(e.email !== currentUser.email){
+              if(e.review.trim(' ').length!==0) notBlank.push(e);
+          } 
+        }
+        else{
+        if(e.review.trim(' ').length!==0) notBlank.push(e);
+        } 
+       });
+       
  
   if(true){
     return(
@@ -210,7 +241,7 @@ const Candy = () =>{
           </div>
         </div>
 
-        {!reviewed&&currentUser&&(<div id="newReview">
+        {!userReview&&currentUser&&(<div id="newReview">
           <div className='review-input'>
             <h3>Review this product</h3>
             <div class="star-rating">
@@ -241,7 +272,17 @@ const Candy = () =>{
             </div>
           <button onClick={reviewCandy}> Write Review</button>
         </div>)}
-        
+        {userReview&&currentUser&&(<div id="userReview">
+            <h3>Your Review</h3>
+       
+              <p>Review by {userReview.email}  on {userReview.date}</p>
+              
+              <p>{makeStarRating(userReview.rating)}</p>
+              
+              <p>Review: {userReview.review}</p>
+
+              <button onClick={deleteReview}>Delete Review</button>
+            </div>)}
         <h6>Reviews: </h6>
         <ul id="reviewList">
           {notBlank.map(e=>
@@ -258,5 +299,8 @@ const Candy = () =>{
     )
   }
 };
+}
+}
+
 
 export default Candy
