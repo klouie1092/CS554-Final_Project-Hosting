@@ -44,6 +44,8 @@ const useStyles = makeStyles({
 
 const CandyList = () =>{
   const [candyData, setCandyData] = useState(undefined);
+  const [ error, setError ] = useState(false);
+  const [ loading, setLoading ] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteCandy, setFilteCandy] = useState('');
   const params = useParams();
@@ -52,21 +54,24 @@ const CandyList = () =>{
 
 
   useEffect(() => {
-      async function fetchData() {
-        try {
-          const {data} = await axios.get('http://localhost:4000/Candies');
-          setCandyData(data);
-          if (params.searchTerm) {
-            setSearchTerm(params.searchTerm);
-          } else {
-            setSearchTerm('');
-          }
-        } catch (e) {
-          console.log(e);
+    async function fetchData() {
+      try {
+        const {data} = await axios.get('http://localhost:4000/Candies');
+        setLoading(false);
+        setError(false);
+        setCandyData(data);
+        if (params.searchTerm) {
+          setSearchTerm(params.searchTerm);
+        } else {
+          setSearchTerm('');
         }
+      } catch (e) {
+        setError(true);
+        console.log(e);
       }
-      fetchData();
-    }, [params]);
+    }
+    fetchData();
+  }, [params]);
 
 
   const roundToHalf = (num) =>{
@@ -142,34 +147,47 @@ const CandyList = () =>{
     return false
   });
 
-  return(
-    <div>
-      {/*<input placeholder="Search For Candies" onChange={event => setSearchTerm(event.target.value)} /> */}
-      <br />
 
-      <label htmlFor='rating'>
-        filter this by rating:
-        <select name = "rating" id ="rating"  onChange={event => setFilteCandy(event.target.value)}>
-          <option value = ""> </option>
-          <option value = "0">1</option>
-          <option value = "1">2</option>
-          <option value = "2">3</option>
-          <option value = "3">4</option>
-          <option value = "4">5</option>
-        </select>
-      </label>
-      <br />
-      <br />
-      <br />
-        {
-          returnVal&&returnVal.length > 0 ? 
-            <Grid container className={classes.grid} spacing={5}>
-              {returnVal.map((candy) =>(buildCards(candy)))}
-            </Grid> :
-            <p>No Results</p>
-        }
-    </div>
-  );
+  if (error){
+    return (
+      <div>
+        <h2>404 page not find</h2>
+      </div>
+    )
+  } else if(loading){
+    return(
+      <div>
+        <h2>Loading . . .</h2>
+      </div>
+    )
+  } else{
+    return(
+      <div>
+        <br />
+        <label htmlFor='rating'>
+          filter this by rating:
+          <select name = "rating" id ="rating"  onChange={event => setFilteCandy(event.target.value)}>
+            <option value = ""> </option>
+            <option value = "0">1</option>
+            <option value = "1">2</option>
+            <option value = "2">3</option>
+            <option value = "3">4</option>
+            <option value = "4">5</option>
+          </select>
+        </label>
+        <br />
+        <br />
+        <br />
+          {
+            returnVal&&returnVal.length > 0 ? 
+              <Grid container className={classes.grid} spacing={5}>
+                {returnVal.map((candy) =>(buildCards(candy)))}
+              </Grid> :
+              <p>No Results</p>
+          }
+      </div>
+    );
+  }
 };
 
 export default CandyList;
