@@ -185,7 +185,7 @@ function ShoppingCart() {
     }
     const buildCards = (candy) =>{
         return(
-            <Grid item xs={12} sm={6} md={4} lg={3} xl={12} key={candy.id}>
+            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={candy.id}>
                 <Card className={classes.card} variant='outlined'>
                     <CardActionArea>
                         <Link to={`/Candy/${candy.id}`}>
