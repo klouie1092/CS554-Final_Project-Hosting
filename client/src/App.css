@@ -114,4 +114,10 @@
 	font-size: 30px;
 }
 
+.starsBig > * {
+	font-size: 28px;
+}
 
+.starsBig {
+	padding-top: 4px;
+}

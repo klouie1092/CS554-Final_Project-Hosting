@@ -209,7 +209,7 @@ const Candy = () =>{
               </div>
               <h1>{candyInfo&&candyInfo.name}</h1>
               <div className='Review-Info'>
-                <h2>{makeStarRating(candyInfo.rating)}</h2>
+                <div className='starsBig'>{makeStarRating(candyInfo.rating)}</div>
                 <p>({candyInfo.rating.toFixed(1)})</p>
                 <a className='numReviews' href='#reviews'>{candyInfo.numRatings} {candyInfo.numRatings > 1? 'Ratings' : 'Rating'}</a>
               </div>

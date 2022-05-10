@@ -256,7 +256,9 @@ function ShoppingCart() {
             })
             return (
                 <div>
-                    {card}
+                    <Grid container className={classes.grid} spacing={5}>
+                        {card}
+                    </Grid>
                     <h1>Total Price: {totalprice.toFixed(2)}</h1>
                     <button onClick={() => setForm(!showForm)}>Check out</button>
                     <form id='checkout' hidden={!showForm}>
