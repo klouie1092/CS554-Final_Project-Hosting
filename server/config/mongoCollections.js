@@ -16,5 +16,6 @@ const getCollectionFn = (collection) => {
 
 module.exports = {
   CandyData: getCollectionFn('CandyData'),
+  OrderData: getCollectionFn('OrderData')
   
 };

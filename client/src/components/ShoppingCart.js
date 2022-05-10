@@ -2,7 +2,7 @@ import React, {useContext, useState, useEffect}  from 'react';
 import { AuthContext } from '../firebase/Auth';
 import axios from 'axios';
 import {Link } from "react-router-dom";
-import createPDF from './CreatePDF'
+
 import {
     Card,
     CardActionArea,
@@ -176,12 +176,37 @@ function ShoppingCart() {
             document.getElementById(id).value = ''
         }
     };
-    const clearShopCart = async (shopcart) => {
+    const clearShopCart = async (shopcart,totalprice) => {
+        //Deletes the shopping cart
+
+      let street= document.getElementById('street').value;
+      let city= document.getElementById('city').value;
+      let state= document.getElementById('state').value;
+      let zip= document.getElementById('zip').value;
+      let cardNum = document.getElementById('payment').value;
+      let payment = cardNum.substring(cardNum.length -4);
+      let address = street +', ' + city + ', ' + state + ', ' + zip;
+      
+      
+        
+      
+        try{
+        await axios.post(`http://localhost:4000/order`, {
+           email: currentUser.email,
+           candy: shopcart,
+           address: address,
+           total: totalprice,
+           payment: payment
+        })
+
         //Deletes the shopping cart
         await axios.delete(`http://localhost:4000/usershopcart/${currentUser.email}`)
         alert('thank you for your purchase')
-        createPDF(shopcart)
+       
         window.location.reload(false)
+    }catch(e){
+        alert(e);
+    }
     }
     const buildCards = (candy) =>{
         return(
@@ -262,19 +287,42 @@ function ShoppingCart() {
                     <h1>Total Price: {totalprice.toFixed(2)}</h1>
                     <button onClick={() => setForm(!showForm)}>Check out</button>
                     <form id='checkout' hidden={!showForm}>
-                        <label>First Name</label>
-                        <input type="text"/>
+                        <label>First Name
+                        <input type="text" />
+                        </label>
                         <br/>
 
-                        <label>Last Name</label>
+                        <label>Last Name
                         <input type="text"/>
+                        </label>
+                        <br/>
+                        
+                        <h3>Address:</h3>
+                        <label>Street Address
+                        <input type="text" id='street'/>
+                        </label>
+                        <br/>
+                        <label>City
+                        <input type="text" id='city'/>
+                        </label>
+                        <br/>
+                        <label> State
+                        <input type="text" id= 'state'/>
+                        </label>
+                        <br/>
+                        <label>Zipcode
+                        <input type="text" id='zip'/>
+                        </label>
                         <br/>
 
-                        <label>Credit Card Number</label>
-                        <input type="text"/>
+
+                        <label>Credit Card Number
+                        <input type="text" id='payment'/>
+                        </label>
                         <br/>
                     </form>
-                <button onClick={() => clearShopCart(shopcart)} hidden={!showForm}>Check Out</button>
+
+                <button onClick={() => clearShopCart(shopcart,totalprice)} hidden={!showForm}>Check Out</button>
             </div>
             );
         }
