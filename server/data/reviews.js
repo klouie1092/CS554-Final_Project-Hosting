@@ -110,10 +110,11 @@ async function deleteReview(candyId,email){
     let candyCollection = await CandyCollection();
    
     let candy = await candyCollection.findOne({_id:ObjectId(candyId)});
-    
+    let rating;
     candy.reviews.forEach((review)=>{
         if(review.email === email){
           exists = true;
+          rating = review.rating;
         }
         else{
           newReviews.push(review);
@@ -121,9 +122,14 @@ async function deleteReview(candyId,email){
     });
     
     if(exists ===false) throw "This user has not reviewed this product";
+
     let deletedReview = {candyId: candyId,
       email:email}
     candy.reviews = newReviews;
+    newTotalRating = ( (candy.numRatings*candy.rating) -rating)/ (candy.numRatings - 1);
+
+    candy.reviews.push(newReview);
+    candy.rating = newTotalRating;
     const updatedInfo = await candyCollection.updateOne(
       { _id: ObjectId(candyId) },
       { $set: candy}
