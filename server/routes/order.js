@@ -68,9 +68,9 @@ router.post('/',async(req,res)=>{
 
     
     try{
-    console.log(candy)
+    
     const createdOrder = await orderData.createOrder(emailRoutes,candy,address,total,payment);
-    console.log('before Float')
+    
     if(createdOrder){
         res.status(200).json(createdOrder);
         return

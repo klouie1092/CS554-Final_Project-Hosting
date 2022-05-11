@@ -109,7 +109,7 @@ const Candy = () =>{
   const changeCandy = async () => {
     let numberha = document.getElementById('number').value
     let numberha1 = Number(numberha)
-    let newStock = candyStock - numberha1
+    
     if (isNaN(numberha1) || isNaN(numberha1) || isNaN(numberha1)){
       alert('input must be number')
       document.getElementById('number').value = ''
@@ -118,22 +118,23 @@ const Candy = () =>{
       alert('input must be integer')
       document.getElementById('number').value = ''
     } 
-    else if (numberha1 > candyInfo.stock){
-      alert('input must less than candy left')
+    
+    else if (numberha1 + candyHave > candyInfo.stock){
+      alert('There is not enough stock available to add that amount to your cart')
       document.getElementById('number').value = ''
     }
     else{
       let total = numberha1 + candyHave
       const body = {id: params.id, name : candyInfo.name, price: candyInfo.price, image:candyInfo.image, numbers:total}
-      const updateInformation = {id:params.id, newStockNumber: newStock}
+      
       try{
         await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
         .then(res=>{
           setCandyHave(res.data.numbers)
-          setCandyStock(newStock)
+          
         })
-        alert(`You successfully purchased ${numberha1} units`)
-        await axios.post('http://localhost:4000/Candies/updateStock', updateInformation)
+        alert(`You successfully added ${numberha1} units to your cart`)
+        
       }
       catch(e){
         alert(e)

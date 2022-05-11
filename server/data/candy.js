@@ -50,6 +50,8 @@ async function getByRating(rate){
 }
 
 async function updateStock(id,takenNumber){
+   // console.log(takenNumber);
+   // console.log(typeof takenNumber)
     if (!id) throw '[data]Id parameter must be supplied';
     if (typeof (id) !== 'string') throw "[data]Id must be a string";
     if (id.trim().length === 0) throw "[data] the input include all space"
@@ -58,6 +60,7 @@ async function updateStock(id,takenNumber){
     const candyDataCollection = await CandyDataInfo();
     const search = await candyDataCollection.findOne({ _id: ObjectId(id) });
     if (search === null) throw "no candy fit with this name";
+    if(takenNumber === -1) takenNumber = 0
     const newStock = {
         stock: takenNumber
     }

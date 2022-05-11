@@ -17,7 +17,7 @@ function Account() {
         const {data} = await axios.get('http://localhost:4000/order/' + currentUser.email);
         
         setPastOrders(data);
-        console.log(data)
+        //console.log(data)
         setLoading(false);
         setError(false);
       } catch (e) {
@@ -42,7 +42,7 @@ function Account() {
       </div>
     )
   } else{
-    console.log(pastOrders)
+   // console.log(pastOrders)
   return (
     <div>
       <h2>Account Page</h2>

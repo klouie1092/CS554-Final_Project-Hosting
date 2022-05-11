@@ -51,6 +51,9 @@ function ShoppingCart() {
     const [ error, setError ] = useState(false);
     const [ loading, setLoading ] = useState(true);
     const [ showForm, setForm ] = useState(false);
+    const [candyData,setCandyData] = useState(undefined);
+    const [quantChange,setQuantChange] = useState([]);
+    const [itemDeleted,setItemDeleted] = useState(false);
     //const [totalPrice, setTotalPrice] = useState(0);
     const classes = useStyles();
     const intn = /^\+?[1-9][0-9]*$/
@@ -60,11 +63,41 @@ function ShoppingCart() {
         async function fetchData(){
             try{
                 const data = await axios.get("http://localhost:4000/usershopcart/" + currentUser.email);
+                const candy = await axios.get("http://localhost:4000/Candies");
+                let newData = [];
+                let changed = [];
+                
+                //console.log(data.data)
+                for(let i = 0; i< data.data.length;i++){
+                    let cand = candy.data.filter(ca=> data.data[i].id === ca._id)
+                    
+                    if(cand[0].stock ===0){
+                        await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:cand[0]._id } })
+                        
+                        if(itemDeleted ===false) setItemDeleted(true)
+                    }
+                    else if(cand[0].stock < data.data[i].numbers){
+                        data.data[i].numbers = cand[0].stock;
+                        let body = {id: cand[0]._id, name : cand[0].name, price: cand[0].price, image:cand[0].image, numbers:data.data[i].numbers}
+                        await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+                        
+                        newData.push(data.data[i])
+                        
+                    }
+                    else{
+                        newData.push(data.data[i])
+                    }
+                }
+                
+                
+                setQuantChange(changed);
+                setShopcartData(newData)
+                setCandyData(candy.data);
                 //console.log(data.data)
                 //useContext(data.data.results);
                 setLoading(false)
                 setError(false)
-                setShopcartData(data.data);
+               
                 //console.log(shopcart===undefined)
 
             }
@@ -75,26 +108,27 @@ function ShoppingCart() {
         }
         fetchData();
 
-    }, [currentUser.email]);
-    const deleteC = async(id, candyNumber) =>{        
+    }, [currentUser.email,itemDeleted]);
+    const deleteC = async(id, candyNumber,name) =>{        
         try{
             await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } })
-            .then(res=>{
+            .then(async res=>{
                 let olddata = shopcart
-                console.log(shopcart)
+               // console.log(shopcart)
                 //let num 
                 let changeData = olddata.filter((e, ind) => {
                     return e.id !== res.data.id;
                 })
-                console.log(changeData)
+                //console.log(changeData)
                 // olddata.splice(num,1)
                 // console.log(shopcart)
                 // console.log(olddata)
+                alert("You have successfully deleted item: " +name + " from your cart" )
                 setShopcartData(changeData)
             })
-            const updateInfomation = {id:id, newStockNumber: candyNumber}
-            await axios.post('http://localhost:4000/Candies/stockDelete', updateInfomation)
-            alert("successful delete the candy")
+            
+            
+            
         }
         catch(e){
             alert(e)
@@ -102,7 +136,7 @@ function ShoppingCart() {
 	}
     const changeCandy = async (id,name, price, image, number) => {
         let data1
-        let newCandyStock
+      
         try{
             const {data} = await axios.get('http://localhost:4000/Candy/' + id);
             data1 = data
@@ -125,7 +159,7 @@ function ShoppingCart() {
           alert('input must be integer')
           document.getElementById(id).value = ''
         }
-        else if (numberha1 > data1.stock){
+        else if (numberha1  > data1.stock){
           alert('input must less than candy left')
           document.getElementById(id).value = ''
         }
@@ -133,19 +167,12 @@ function ShoppingCart() {
 
         else{
             const body = {id: id, name : name, price: price, image:image, numbers:numberha1}
-            if(numberha1 > number){
-                newCandyStock = data1.stock - (numberha1 - number)
-                //console.log('newCandyStock', newCandyStock)
-            }
-            else if(numberha1 < number){
-                newCandyStock = data1.stock - (numberha1 - number)
-            }
-            else{
+            
+            
+            if(numberha1 === number){
                 alert(`You already have ${number} units in your cart, you can only edit to change the value`)
                 return;
             }
-            const updateInformation = {id:id, newStockNumber: newCandyStock}
-
             try{
                 
                 await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
@@ -166,8 +193,8 @@ function ShoppingCart() {
                     setShopcartData(changeData)
                     //console.log(changeData)
                 })
-                await axios.post('http://localhost:4000/Candies/updateStock', updateInformation).then(res=>{})
-                alert('you Edit it to shopping cart')
+                
+                alert('you have edited your shopping cart')
             }
             catch(e){
                 alert(e)
@@ -186,11 +213,23 @@ function ShoppingCart() {
       let cardNum = document.getElementById('payment').value;
       let payment = cardNum.substring(cardNum.length -4);
       let address = street +', ' + city + ', ' + state + ', ' + zip;
-      
-      
+      try{
+      const checkStock = await axios.get("http://localhost:4000/Candies")
+      let check;
+      let stop = false;
+      shopcart.forEach((e)=>{
+        check = checkStock.data.filter(cand=> cand._id === e.id);
+
+        if(check[0].stock < e.numbers){
+            alert("There has been a change in stock, cannot complete order");
+            stop = true;
+            window.location.reload();
+            return
+        }
+      })
         
       
-        try{
+        if(stop===false){
         await axios.post(`http://localhost:4000/order`, {
            email: currentUser.email,
            candy: shopcart,
@@ -199,11 +238,26 @@ function ShoppingCart() {
            payment: payment
         })
 
-        //Deletes the shopping cart
+        //Deletes the shopping carty
+
+        let updateInformation;
+        let currentCandy;
+        shopcart.forEach(async (e)=>{
+            currentCandy = candyData.filter(cand=> cand._id === e.id) 
+           // console.log(currentCandy)
+            updateInformation  = {
+                id: e.id,
+                newStockNumber: (currentCandy[0].stock - e.numbers)
+
+            }
+            await axios.post('http://localhost:4000/Candies/updateStock', updateInformation)
+        })
+        
         await axios.delete(`http://localhost:4000/usershopcart/${currentUser.email}`)
         alert('thank you for your purchase')
        
         window.location.reload(false)
+    }
     }catch(e){
         alert(e);
     }
@@ -231,7 +285,12 @@ function ShoppingCart() {
                                 </Typography>   
                             </CardContent>
                         </Link>
-                        <h2>You have {candy.numbers} {candy.name} in your shopping cart</h2>
+                        
+                        
+                        <h2>You have {candy.numbers} {candy.name} in your shopping cart </h2>
+                        {quantChange.includes(candy.id)&&currentUser&&(
+                            <h3>This quantity has changed!! </h3>
+                            )}
                         <label>
                             <input
                                 id={candy.id}
@@ -240,7 +299,7 @@ function ShoppingCart() {
                             />
                         </label>
                         <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Quantity</Button>
-                        <Button onClick={()=>deleteC(candy.id, candy.numbers)}>Delete this candy</Button>
+                        <Button onClick={()=>deleteC(candy.id, candy.numbers,candy.name)}>Delete this candy</Button>
                     </CardActionArea>
                 </Card>
             </Grid>
@@ -266,12 +325,17 @@ function ShoppingCart() {
         if(shopcart === undefined || shopcart.length === 0){
             //console.log('aaaa')
             return(
+                
                 <div>
+                      {itemDeleted===true&&currentUser&&(
+                        <h2 id='itemDeleted'>Due to changes in stock, one or more items have been removed from your cart. Please review your items before checking out</h2>
+                    )}
                     <h2>Your didn't add any candy in to shopping cart go add some!!!</h2>
                 </div>
             )
         }
         else{
+            
             //console.log(shopcart)
             let totalprice = 0
             card  = shopcart && shopcart.map((eachCandy) =>{
@@ -281,6 +345,13 @@ function ShoppingCart() {
             })
             return (
                 <div>
+
+                    {quantChange.length!==0&&currentUser&&(
+                        <h1 id='quantChange'>'Please review your cart, changes have been made due to changes in available stock</h1>
+                    )}
+                    {itemDeleted===true&&currentUser&&(
+                        <h2 id='itemDeleted'>Due to changes in stock, one or more items have been removed from your cart. Please review your items before checking out</h2>
+                    )}
                     <Grid container className={classes.grid} spacing={5}>
                         {card}
                     </Grid>

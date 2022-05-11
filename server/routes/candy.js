@@ -45,52 +45,68 @@ router.post('/Candy/searchByName', async (req,res) =>{
     let searchName = req.body;
     if(!searchName){
         res.status(400).json({error: '[candy Routes] search name is not provided'})
+        return
     }
     if(typeof(searchName) !== 'string'){
         res.status(400).json({error: '[candy Routes] search name type is not string'})
+        return
     }
     if(searchName.trim().length ===0){
         res.status(400).json({error: '[candy Routes] search name can not be all space'})
+        return
 
     }
     try{
         const search = await candyData.getByName(searchName);
         res.json(search);
+        return
     }
     catch(e){
         res.status(400).json({ error: e });
+        return
     }
 });
 
 router.post('/Candies/updateStock', async (req,res) =>{
     let candyId = req.body.id;
     let stockNumber = req.body.newStockNumber;
+    if (stockNumber === 0) stockNumber = -1;
+    //console.log(req.body)
+    
     //console.log(candyId)
     //console.log(stockNumber)
-    //console.log(typeof(stockNumber))
-    console.log(stockNumber)
+   // console.log(typeof(stockNumber))
+    //console.log(stockNumber)
     if(!candyId){
         res.status(400).json({error: '[candy Routes] id is not provided'})
+        return
     }
     if(typeof(candyId) !== 'string'){
         res.status(400).json({error: '[candy Routes] candy id type is not string'})
+        return
     }
-    if(candyId.trim().length === 0){
+    if(candyId.trim(' ').length === 0){
         res.status(400).json({error: '[candy Routes] candy id can not be all space'})
+        return
     }
+    
     if(!stockNumber){
         res.status(400).json({error: '[candy Routes] stock number is not provided'})
+        return
     }
     if(typeof(stockNumber) !== 'number'){
         res.status(400).json({error: '[candy Routes] stock number type is not number'})
+        return
     }   
     try{
+        
         console.log('hello')
         const updateStock = await candyData.updateStock(candyId,stockNumber);
-        console.log(updateStock)
+         console.log('hello')
         if(updateStock.updateSuccess === true){
             res.status(200)
         }
+        return
     }
     catch(e){
         res.status(400).json({ error: e });
