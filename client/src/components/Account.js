@@ -5,8 +5,7 @@ import { AuthContext } from '../firebase/Auth';
 import SignOutButton from './SignOut';
 import '../App.css';
 import ChangePassword from './ChangePassword';
-
-import '../App.css';
+import { Link } from 'react-router-dom';
 
 function Account() {
   const {currentUser} = useContext(AuthContext);
@@ -52,7 +51,6 @@ function Account() {
         <h1>Account Page</h1>
         <ChangePassword />
         <SignOutButton />
-
         <br/>
         <h3>Past Orders</h3>
         {pastOrders&&currentUser&&(<ul id="reviewList">
@@ -61,13 +59,14 @@ function Account() {
             <li key={e._id}>
               <h4>Order #{e._id}</h4>
           
-            
               <h5>Purchased Items:</h5>
               <div className='PastPurchase'>
                 <div className='ItemList'>
                   {e.order.candy.map(purchase=>
-                    <div key={purchase.name} className="OrderItem">
-                      <img src={purchase.image} alt='candy'/>
+                    <div key={purchase.id} className="OrderItem">
+                      <Link to={`/Candy/${purchase.id}`}>
+                        <img className ='orderImage' src={purchase.image} alt='candy'/>
+                      </Link>
                       <div className="OrderInfo">
                         <div className="TopOrderInfo">
                           <p>{purchase.name} </p>

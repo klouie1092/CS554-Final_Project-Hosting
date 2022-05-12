@@ -163,6 +163,7 @@ const CandyList = () =>{
   } else{
     return(
       <div>
+        <h1>{searchTerm ? 'Results for "' +searchTerm+ '"' : "All Candies"}</h1>
         <br />
         <label htmlFor='rating'>
           filter this by rating:
