@@ -167,8 +167,6 @@ const Candy = () =>{
   const changeRating = (num) => {
     setReviewRating(num);
   }
-
-
   
   
   if(loading){
