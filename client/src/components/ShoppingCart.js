@@ -62,8 +62,8 @@ function ShoppingCart() {
     useEffect(() =>{
         async function fetchData(){
             try{
-                const data = await axios.get("http://localhost:4000/usershopcart/" + currentUser.email);
-                const candy = await axios.get("http://localhost:4000/Candies");
+                const data = await axios.get("https://final554groupnull.herokuapp.com/usershopcart/" + currentUser.email);
+                const candy = await axios.get("https://final554groupnull.herokuapp.com/Candies");
                 let newData = [];
                 let changed = [];
                 
@@ -72,14 +72,14 @@ function ShoppingCart() {
                     let cand = candy.data.filter(ca=> data.data[i].id === ca._id)
                     
                     if(cand[0].stock ===0){
-                        await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:cand[0]._id } })
+                        await axios.delete("https://final554groupnull.herokuapp.com/usershopcartid/" + currentUser.email,{ data: { id:cand[0]._id } })
                         
                         if(itemDeleted ===false) setItemDeleted(true)
                     }
                     else if(cand[0].stock < data.data[i].numbers){
                         data.data[i].numbers = cand[0].stock;
                         let body = {id: cand[0]._id, name : cand[0].name, price: cand[0].price, image:cand[0].image, numbers:data.data[i].numbers}
-                        await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+                        await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
                         
                         newData.push(data.data[i])
                         
@@ -111,7 +111,7 @@ function ShoppingCart() {
     }, [currentUser.email,itemDeleted]);
     const deleteC = async(id, candyNumber,name) =>{        
         try{
-            await axios.delete("http://localhost:4000/usershopcartid/" + currentUser.email,{ data: { id:id } })
+            await axios.delete("https://final554groupnull.herokuapp.com/usershopcartid/" + currentUser.email,{ data: { id:id } })
             .then(async res=>{
                 let olddata = shopcart
                // console.log(shopcart)
@@ -138,7 +138,7 @@ function ShoppingCart() {
         let data1
       
         try{
-            const {data} = await axios.get('http://localhost:4000/Candy/' + id);
+            const {data} = await axios.get('https://final554groupnull.herokuapp.com/Candy/' + id);
             data1 = data
             console.log(data1)
         }
@@ -175,7 +175,7 @@ function ShoppingCart() {
             }
             try{
                 
-                await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+                await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
                 .then(res=>{
                     let olddata = shopcart
                     //let num 
@@ -214,7 +214,7 @@ function ShoppingCart() {
       let payment = cardNum.substring(cardNum.length -4);
       let address = street +', ' + city + ', ' + state + ', ' + zip;
       try{
-      const checkStock = await axios.get("http://localhost:4000/Candies")
+      const checkStock = await axios.get("https://final554groupnull.herokuapp.com/Candies")
       let check;
       let stop = false;
       shopcart.forEach((e)=>{
@@ -230,7 +230,7 @@ function ShoppingCart() {
         
       
         if(stop===false){
-        await axios.post(`http://localhost:4000/order`, {
+        await axios.post(`https://final554groupnull.herokuapp.com/order`, {
            email: currentUser.email,
            candy: shopcart,
            address: address,
@@ -250,10 +250,10 @@ function ShoppingCart() {
                 newStockNumber: (currentCandy[0].stock - e.numbers)
 
             }
-            await axios.post('http://localhost:4000/Candies/updateStock', updateInformation)
+            await axios.post('https://final554groupnull.herokuapp.com/Candies/updateStock', updateInformation)
         })
         
-        await axios.delete(`http://localhost:4000/usershopcart/${currentUser.email}`)
+        await axios.delete(`https://final554groupnull.herokuapp.com/usershopcart/${currentUser.email}`)
         alert('thank you for your purchase')
        
         window.location.reload(false)

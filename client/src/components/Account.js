@@ -14,7 +14,7 @@ function Account() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const {data} = await axios.get('http://localhost:4000/order/' + currentUser.email);
+        const {data} = await axios.get('https://final554groupnull.herokuapp.com/order/' + currentUser.email);
         
         setPastOrders(data);
         //console.log(data)

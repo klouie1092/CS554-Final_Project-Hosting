@@ -24,7 +24,7 @@ const Candy = () =>{
     async function fetchData() {
       try {
         let candyId = params.id
-        const {data} = await axios.get('http://localhost:4000/Candy/' + candyId);
+        const {data} = await axios.get('https://final554groupnull.herokuapp.com/Candy/' + candyId);
         setCandyInfo(data);
         setCandyStock(data.stock)
       
@@ -33,7 +33,7 @@ const Candy = () =>{
             if(e.email === currentUser.email) setUserReview(e)
           });
           
-          const have = await axios.get('http://localhost:4000/usershopcart/' + currentUser.email)
+          const have = await axios.get('https://final554groupnull.herokuapp.com/usershopcart/' + currentUser.email)
           let changeData = await have.data.filter((e) => {
             return e.id === candyId
           })
@@ -65,7 +65,7 @@ const Candy = () =>{
     let candyId = candyInfo._id;
     
     try{
-      await axios.post('http://localhost:4000/review',{
+      await axios.post('https://final554groupnull.herokuapp.com/review',{
         candyId: candyId,
         email: email,
         review: review,
@@ -94,7 +94,7 @@ const Candy = () =>{
   const deleteReview = async()=>{
     try{
 
-      await axios.post('http://localhost:4000/review/delete',{
+      await axios.post('https://final554groupnull.herokuapp.com/review/delete',{
         candyId: candyInfo._id,
         email: currentUser.email,
       });
@@ -128,7 +128,7 @@ const Candy = () =>{
       const body = {id: params.id, name : candyInfo.name, price: candyInfo.price, image:candyInfo.image, numbers:total}
       
       try{
-        await axios.put('http://localhost:4000/usershopcart/'+ currentUser.email, body,)
+        await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
         .then(res=>{
           setCandyHave(res.data.numbers)
           
