@@ -214,31 +214,31 @@ function ShoppingCart() {
         e.preventDefault()
         let totalprice = shopcart.reduce((curr, item) => curr + item.price * item.numbers, 0)
 
-        if(typeof firstName !== 'string' || firstName == ''){
+        if(typeof firstName !== 'string' || firstName === ''){
             alert('please enter a valid firstName')
             return;
         }
-        if(typeof lastName !== 'string' || lastName == ''){
+        if(typeof lastName !== 'string' || lastName === ''){
             alert('please enter a valid lastName')
             return;
         }
-        if(typeof street !== 'string' || street == ''){
+        if(typeof street !== 'string' || street === ''){
             alert('please enter a valid street')
             return;
         }
-        if(typeof city !== 'string' || city == ''){
+        if(typeof city !== 'string' || city === ''){
             alert('please enter a valid city')
             return;
         }
-        if(typeof state !== 'string' || state == ''){
+        if(typeof state !== 'string' || state === ''){
             alert('please enter a valid state')
             return;
         }
-        if(typeof zip !== 'string' || parseInt(zip) == NaN){
+        if(typeof zip !== 'string' || isNaN(parseInt(zip))){
             alert('please enter a valid zipcode')
             return
         }
-        if(typeof payment !== 'string' || parseInt(payment) == 0){
+        if(typeof payment !== 'string' || isNaN(parseInt(payment))){
             alert('please enter a valid credit card number')
             return
         }
