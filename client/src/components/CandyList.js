@@ -56,7 +56,7 @@ const CandyList = () =>{
   useEffect(() => {
     async function fetchData() {
       try {
-        const {data} = await axios.get('http://localhost:4000/Candies');
+        const {data} = await axios.get('https://final554groupnull.herokuapp.com/Candies');
         setLoading(false);
         setError(false);
         setCandyData(data);
