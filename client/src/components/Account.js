@@ -54,14 +54,14 @@ function Account() {
       {pastOrders&&currentUser&&(<ul id="reviewList">
             {pastOrders.map(e=>
               
-              <li>
+              <li key={e._id}>
                <h4>Order #{e._id}</h4>
              
                
                 <h5>Purchased Items:</h5>
                 
                 {e.order.candy.map(purchase=>
-                <div>
+                <div key={purchase.name}>
                   <img src={purchase.image} alt='candy'/>
                   <p>Item: {purchase.name} </p>
                   <p>Price Per Unit: {purchase.price}</p>

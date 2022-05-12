@@ -280,7 +280,7 @@ const Candy = () =>{
           <p><b>Reviews: </b></p>
           <ul id="reviewList">
             {notBlank.map(e=>
-              <li>
+              <li key={e.email}>
                 <p>Review by {e.email}  on {e.date}</p>
                 
                 <p>{makeStarRating(e.rating)}</p>

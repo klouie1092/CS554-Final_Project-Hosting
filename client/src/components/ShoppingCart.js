@@ -1,7 +1,7 @@
 import React, {useContext, useState, useEffect}  from 'react';
 import { AuthContext } from '../firebase/Auth';
 import axios from 'axios';
-import {Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 
 import {
     Card,
@@ -51,9 +51,16 @@ function ShoppingCart() {
     const [ error, setError ] = useState(false);
     const [ loading, setLoading ] = useState(true);
     const [ showForm, setForm ] = useState(false);
-    const [candyData,setCandyData] = useState(undefined);
-    const [quantChange,setQuantChange] = useState([]);
-    const [itemDeleted,setItemDeleted] = useState(false);
+    const [ candyData,setCandyData] = useState(undefined);
+    const [ quantChange,setQuantChange] = useState([]);
+    const [ itemDeleted,setItemDeleted] = useState(false);
+    const [ firstName, setFirstName] = useState('');
+    const [ lastName, setLastName] = useState('');
+    const [ street, setStreet] = useState('');
+    const [ city, setCity] = useState('');
+    const [ state, setState] = useState('');
+    const [ zip, setZip] = useState(0);
+    const [ payment, setPayment] = useState(0);
     //const [totalPrice, setTotalPrice] = useState(0);
     const classes = useStyles();
     const intn = /^\+?[1-9][0-9]*$/
@@ -203,64 +210,94 @@ function ShoppingCart() {
             document.getElementById(id).value = ''
         }
     };
-    const clearShopCart = async (shopcart,totalprice) => {
-        //Deletes the shopping cart
+    const dataCheck = async (e) => {
+        e.preventDefault()
+        let totalprice = shopcart.reduce((curr, item) => curr + item.price * item.numbers, 0)
 
-      let street= document.getElementById('street').value;
-      let city= document.getElementById('city').value;
-      let state= document.getElementById('state').value;
-      let zip= document.getElementById('zip').value;
-      let cardNum = document.getElementById('payment').value;
-      let payment = cardNum.substring(cardNum.length -4);
-      let address = street +', ' + city + ', ' + state + ', ' + zip;
-      try{
-      const checkStock = await axios.get("https://final554groupnull.herokuapp.com/Candies")
-      let check;
-      let stop = false;
-      shopcart.forEach((e)=>{
-        check = checkStock.data.filter(cand=> cand._id === e.id);
-
-        if(check[0].stock < e.numbers){
-            alert("There has been a change in stock, cannot complete order");
-            stop = true;
-            window.location.reload();
+        if(typeof firstName !== 'string' || firstName == ''){
+            alert('please enter a valid firstName')
+            return;
+        }
+        if(typeof lastName !== 'string' || lastName == ''){
+            alert('please enter a valid lastName')
+            return;
+        }
+        if(typeof street !== 'string' || street == ''){
+            alert('please enter a valid street')
+            return;
+        }
+        if(typeof city !== 'string' || city == ''){
+            alert('please enter a valid city')
+            return;
+        }
+        if(typeof state !== 'string' || state == ''){
+            alert('please enter a valid state')
+            return;
+        }
+        if(typeof zip !== 'string' || parseInt(zip) == NaN){
+            alert('please enter a valid zipcode')
             return
         }
-      })
-        
-      
-        if(stop===false){
-        await axios.post(`https://final554groupnull.herokuapp.com/order`, {
-           email: currentUser.email,
-           candy: shopcart,
-           address: address,
-           total: totalprice,
-           payment: payment
-        })
+        if(typeof payment !== 'string' || parseInt(payment) == 0){
+            alert('please enter a valid credit card number')
+            return
+        }
 
-        //Deletes the shopping carty
+        clearShopCart(shopcart, totalprice)
 
-        let updateInformation;
-        let currentCandy;
-        shopcart.forEach(async (e)=>{
-            currentCandy = candyData.filter(cand=> cand._id === e.id) 
-           // console.log(currentCandy)
-            updateInformation  = {
-                id: e.id,
-                newStockNumber: (currentCandy[0].stock - e.numbers)
+    }
+    const clearShopCart = async (shopcart,totalprice) => {
+        //Deletes the shopping cart
+        let paymentInfo = payment.substring(payment.length -4);
+        let address = street +', ' + city + ', ' + state + ', ' + zip;
+        try{
+        const checkStock = await axios.get("https://final554groupnull.herokuapp.com/Candies")
+        let check;
+        let stop = false;
+        shopcart.forEach((e)=>{
+            check = checkStock.data.filter(cand=> cand._id === e.id);
 
+            if(check[0].stock < e.numbers){
+                alert("There has been a change in stock, cannot complete order");
+                stop = true;
+                window.location.reload();
+                return
             }
-            await axios.post('https://final554groupnull.herokuapp.com/Candies/updateStock', updateInformation)
         })
+            
         
-        await axios.delete(`https://final554groupnull.herokuapp.com/usershopcart/${currentUser.email}`)
-        alert('thank you for your purchase')
-       
-        window.location.reload(false)
-    }
-    }catch(e){
-        alert(e);
-    }
+            if(stop===false){
+            await axios.post(`https://final554groupnull.herokuapp.com/order`, {
+            email: currentUser.email,
+            candy: shopcart,
+            address: address,
+            total: totalprice,
+            payment: paymentInfo
+            })
+
+            //Deletes the shopping cart
+
+            let updateInformation;
+            let currentCandy;
+            shopcart.forEach(async (e)=>{
+                currentCandy = candyData.filter(cand=> cand._id === e.id) 
+            // console.log(currentCandy)
+                updateInformation  = {
+                    id: e.id,
+                    newStockNumber: (currentCandy[0].stock - e.numbers)
+
+                }
+                await axios.post('https://final554groupnull.herokuapp.com/Candies/updateStock', updateInformation)
+            })
+            
+            await axios.delete(`https://final554groupnull.herokuapp.com/usershopcart/${currentUser.email}`)
+            alert('thank you for your purchase')
+        
+            window.location.reload(false)
+        }
+        }catch(e){
+            alert(e);
+        }
     }
     const buildCards = (candy) =>{
         return(
@@ -340,7 +377,7 @@ function ShoppingCart() {
             let totalprice = 0
             card  = shopcart && shopcart.map((eachCandy) =>{
                 //console.log(eachCandy)
-                totalprice = totalprice+ eachCandy.price * eachCandy.numbers
+                totalprice = totalprice + eachCandy.price * eachCandy.numbers
                 return buildCards(eachCandy);
             })
             return (
@@ -357,44 +394,39 @@ function ShoppingCart() {
                     </Grid>
                     <h1>Total Price: {totalprice.toFixed(2)}</h1>
                     <button onClick={() => setForm(!showForm)}>Check out</button>
-                    <form id='checkout' hidden={!showForm}>
+                    <form id='checkout' hidden={!showForm} onSubmit={dataCheck}>
                         <label>First Name
-                        <input type="text" />
+                        <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
                         </label>
                         <br/>
-
                         <label>Last Name
-                        <input type="text"/>
+                        <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
                         </label>
                         <br/>
-                        
                         <h3>Address:</h3>
                         <label>Street Address
-                        <input type="text" id='street'/>
+                        <input type="text" id='street' value={street} onChange={e => setStreet(e.target.value)}/>
                         </label>
                         <br/>
                         <label>City
-                        <input type="text" id='city'/>
+                        <input type="text" id='city' value={city} onChange={e => setCity(e.target.value)}/>
                         </label>
                         <br/>
                         <label> State
-                        <input type="text" id= 'state'/>
+                        <input type="text" id= 'state' value={state} onChange={e => setState(e.target.value)}/>
                         </label>
                         <br/>
                         <label>Zipcode
-                        <input type="text" id='zip'/>
+                        <input type="number" id='zip' value={zip} onChange={e => setZip(e.target.value)}/>
                         </label>
                         <br/>
-
-
                         <label>Credit Card Number
-                        <input type="text" id='payment'/>
+                        <input type="number" id='payment' value={payment} onChange={e => setPayment(e.target.value)}/>
                         </label>
                         <br/>
+                        <input type="submit" value="Submit"/>
                     </form>
-
-                <button onClick={() => clearShopCart(shopcart,totalprice)} hidden={!showForm}>Check Out</button>
-            </div>
+                </div>
             );
         }
     }
