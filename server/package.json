@@ -1,11 +1,11 @@
 {
-  "name": "cs-554-lab-6",
+  "name": "cs-554-project",
   "version": "1.0.0",
-  "description": "My redux Lab6 module",
+  "description": "final project",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node App.js"
   },
   "author": "Qingyuan Liu 20007373",
   "license": "MIT",
