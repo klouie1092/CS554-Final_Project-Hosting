@@ -30,6 +30,20 @@ function Account() {
     fetchData();
   }, [currentUser.email]);
 
+  const changeCandy = async (id , name, price,image,number) => {
+    let numberha1 = Number(number)
+    const body = {id:id, name :name, price:price, image:image, numbers:number}
+      
+    try{
+      await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
+      .then(res=>{})
+      alert(`You successfully added ${numberha1} units to your cart`)
+    }
+    catch(e){
+      alert(e)
+    }
+  };
+
 
   if (error){
     return (
@@ -75,7 +89,7 @@ function Account() {
                         <p>${purchase.price.toFixed(2)} ea</p>
                         <div className="BottomOrderInfo">
                           <p>Quantity Purchased: {purchase.numbers}</p>
-                          <button>Order Again</button>
+                          <button onClick={() => changeCandy(purchase.id,purchase.name,purchase.price,purchase.image,purchase.numbers)}>Order Again</button>
                         </div>
                       </div>
                     </div>
