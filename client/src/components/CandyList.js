@@ -96,23 +96,21 @@ const CandyList = () =>{
   const buildCards = (candy) =>{
     return(
       <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={candy._id}>
-          <Card className={classes.card} variant='outlined'>
-            <CardActionArea>
-              <Link to={`/Candy/${candy._id}`}>
-                <CardMedia
-                  className={classes.media}
-                  component='img'
-                  image = {candy.image}
-                  title = 'image'
-                />
-                <CardContent>
-                  <h2 className='UnderLine'>{candy.name}</h2>
-                  <h2>{makeStarRating(candy.rating)} ({candy.numRatings})</h2>
-                  <h2>${candy.price.toFixed(2)}</h2>
-                </CardContent>
-              </Link>
-            </CardActionArea>
-          </Card>
+        <Card className={classes.card} variant='outlined'>
+          <Link to={`/Candy/${candy._id}`}>
+            <CardMedia
+              className={classes.media}
+              component='img'
+              image = {candy.image}
+              title = 'image'
+            />
+            <CardContent>
+              <h2 className='UnderLine'>{candy.name}</h2>
+              <h2>{makeStarRating(candy.rating)} ({candy.numRatings})</h2>
+              <h2>${candy.price.toFixed(2)}</h2>
+            </CardContent>
+          </Link>
+        </Card>
       </Grid>
     );
   }
