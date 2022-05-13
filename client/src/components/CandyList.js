@@ -106,8 +106,8 @@ const CandyList = () =>{
                   title = 'image'
                 />
                 <CardContent>
-                  <h2>{candy.name}</h2>
-                  <h2>{makeStarRating(candy.rating)} {candy.numRatings}</h2>
+                  <h2 className='UnderLine'>{candy.name}</h2>
+                  <h2>{makeStarRating(candy.rating)} ({candy.numRatings})</h2>
                   <h2>${candy.price.toFixed(2)}</h2>
                 </CardContent>
               </Link>

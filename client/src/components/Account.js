@@ -82,7 +82,7 @@ function Account() {
                   )}
                 </div>
                 <div className='TotalOrderInfo'>
-                  <p><b>Total Price {parseFloat(e.order.total).toFixed(2)}</b></p>
+                  <p><b>Total Price: ${parseFloat(e.order.total).toFixed(2)}</b></p>
                   <p><b>Payment Info: </b></p>
                   <p>Billing Address: {e.order.address} </p>
                   <p>Payment Made With Card Ending In: {e.order.payment}</p>
