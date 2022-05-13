@@ -196,11 +196,11 @@ function ShoppingCart() {
             alert('please enter a valid state')
             return;
         }
-        if(typeof zip !== 'string' || isNaN(parseInt(zip))){
+        if(typeof zip !== 'string' || isNaN(parseInt(zip)) ||  zip.length !== 5){
             alert('please enter a valid zipcode')
             return
         }
-        if(typeof payment !== 'string' || isNaN(parseInt(payment))){
+        if(typeof payment !== 'string' || isNaN(parseInt(payment)) || payment.length > 19 || payment.length < 8){
             alert('please enter a valid credit card number')
             return
         }

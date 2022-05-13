@@ -11,7 +11,7 @@ const createPDF = shopcart => {
     const rows = [];
 
     shopcart.forEach(candy => {
-        rows.push([candy.name, candy.numbers, candy.price.toFixed(2), candy.numbers * candy.price])
+        rows.push([candy.name, candy.numbers, `$${candy.price.toFixed(2)}`, `$${(candy.numbers * candy.price).toFixed(2)}`])
     })
 
     doc.autoTable({columns:columns, body:rows});
