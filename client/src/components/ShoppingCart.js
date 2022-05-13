@@ -37,19 +37,20 @@ function ShoppingCart() {
                 let changed = [];
                 
                 //console.log(data.data)
+                let boolCheck = false;
                 for(let i = 0; i< data.data.length;i++){
                     let cand = candy.data.filter(ca=> data.data[i].id === ca._id)
                     
                     if(cand[0].stock ===0){
                         await axios.delete("https://final554groupnull.herokuapp.com/usershopcartid/" + currentUser.email,{ data: { id:cand[0]._id } })
                         
-                        if(itemDeleted ===false) setItemDeleted(true)
+                        if(boolCheck ===false) boolCheck = true
                     }
                     else if(cand[0].stock < data.data[i].numbers){
                         data.data[i].numbers = cand[0].stock;
                         let body = {id: cand[0]._id, name : cand[0].name, price: cand[0].price, image:cand[0].image, numbers:data.data[i].numbers}
                         await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
-                        
+                        changed.push(data.data[i])
                         newData.push(data.data[i])
                         
                     }
@@ -58,7 +59,7 @@ function ShoppingCart() {
                     }
                 }
                 
-                
+                setItemDeleted(boolCheck);
                 setQuantChange(changed);
                 setShopcartData(newData)
                 setCandyData(candy.data);
@@ -77,7 +78,8 @@ function ShoppingCart() {
         }
         fetchData();
 
-    }, [currentUser.email,itemDeleted]);
+    }, [currentUser.email]);
+
     const deleteC = async(id, candyNumber,name) =>{        
         try{
             await axios.delete("https://final554groupnull.herokuapp.com/usershopcartid/" + currentUser.email,{ data: { id:id } })
@@ -292,18 +294,18 @@ function ShoppingCart() {
             const items = shopcart && shopcart.reduce((partialSum, a) => partialSum + a.numbers, 0);
             const totalprice = shopcart && shopcart.reduce((partialSum, a) => partialSum + a.price * a.numbers, 0);
             return (
-                <div className='ShoppingCart'>
-                  <div className='TopCheckout'>
-                    <h1>Cart</h1>
-                    <span>({items} items)</span>
-                  </div>
-
-                    {quantChange.length!==0&&currentUser&&(
-                        <h1 id='quantChange'>'Please review your cart, changes have been made due to changes in available stock</h1>
-                    )}
-                    {itemDeleted===true&&currentUser&&(
-                        <h2 id='itemDeleted'>Due to changes in stock, one or more items have been removed from your cart. Please review your items before checking out</h2>
-                    )}
+                <div className='FullPage'>
+                  {quantChange.length!==0&&currentUser&&(
+                    <div id='quantChange'>'Please review your cart, changes have been made due to changes in available stock</div>
+                  )}
+                  {itemDeleted===true&&currentUser&&(
+                    <div id='itemDeleted'>Due to changes in stock, one or more items have been removed from your cart. Please review your items before checking out</div>
+                  )}
+                  <div className='ShoppingCart'>
+                    <div className='TopCheckout'>
+                      <h1>Cart</h1>
+                      <span>({items} items)</span>
+                    </div>
                     <div className='PastPurchase'>
                       <div className='ItemList'>
                         {shopcart && shopcart.map((candy) =>
@@ -369,6 +371,7 @@ function ShoppingCart() {
                           <input type="submit" value="Submit"/>
                       </form>
                     </div>
+                  </div>
                 </div>
               </div>
             );

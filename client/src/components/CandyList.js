@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Grid,

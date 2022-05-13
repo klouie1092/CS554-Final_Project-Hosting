@@ -233,3 +233,16 @@ a:active { text-decoration: none; }
 .MuiCardContent-root > .UnderLine:hover {
 	color: teal;
 }
+
+#quantChange, #itemDeleted {
+    text-align: center;
+    font-size: 24px;
+}
+
+#quantChange {
+	background-color: yellow;
+}
+
+#itemDeleted {
+	background-color: red;
+}
