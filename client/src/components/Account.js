@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 
 function Account() {
   const {currentUser} = useContext(AuthContext);
+  const [candyData, setCandyData] = useState(undefined);
   const [pastOrders, setPastOrders] = useState([])
   const [ error, setError ] = useState(false);
   const [ loading, setLoading ] = useState(true);
@@ -17,11 +18,16 @@ function Account() {
     async function fetchData() {
       try {
         const {data} = await axios.get('https://final554groupnull.herokuapp.com/order/' + currentUser.email);
-        
         setPastOrders(data);
-        //console.log(data)
         setLoading(false);
         setError(false);
+      } catch (e) {
+        setError(true);
+        console.log(e);
+      }
+      try {
+        const {data} = await axios.get('https://final554groupnull.herokuapp.com/Candies');
+        setCandyData(data);
       } catch (e) {
         setError(true);
         console.log(e);
@@ -37,7 +43,10 @@ function Account() {
     try{
       await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
       .then(res=>{})
-      alert(`You successfully added ${numberha1} units to your cart`)
+      if (numberha1 === 1)
+        alert(`Your cart has been updated to have ${numberha1} unit`)
+      else 
+        alert(`Your cart has been updated to have ${numberha1} units`)
     }
     catch(e){
       alert(e)
@@ -89,7 +98,10 @@ function Account() {
                         <p>${purchase.price.toFixed(2)} ea</p>
                         <div className="BottomOrderInfo">
                           <p>Quantity Purchased: {purchase.numbers}</p>
-                          <button onClick={() => changeCandy(purchase.id,purchase.name,purchase.price,purchase.image,purchase.numbers)}>Order Again</button>
+                          {(candyData&&candyData.filter((candy) => candy._id === purchase.id)[0].stock > purchase.numbers) ?
+                            <button onClick={() => changeCandy(purchase.id,purchase.name,purchase.price,purchase.image,purchase.numbers)}>Order Again</button> :
+                            <p>Not Enough Stock</p>
+                          }
                         </div>
                       </div>
                     </div>

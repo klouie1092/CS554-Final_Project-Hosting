@@ -336,7 +336,7 @@ function ShoppingCart() {
                       )}
                     </div>
                     <div className='Checkout'>
-                      <h1>Total Price: {totalprice.toFixed(2)}</h1>
+                      <h1>Total Price: ${totalprice.toFixed(2)}</h1>
                       <button onClick={() => setForm(!showForm)}>Check out</button>
                       <form id='checkout' hidden={!showForm} onSubmit={dataCheck}>
                           <label>First Name

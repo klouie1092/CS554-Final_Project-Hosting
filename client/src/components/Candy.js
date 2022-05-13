@@ -26,7 +26,7 @@ const Candy = () =>{
         let candyId = params.id
         const {data} = await axios.get('https://final554groupnull.herokuapp.com/Candy/' + candyId);
         setCandyInfo(data);
-        setCandyStock(data.stock)
+        setCandyStock(data.stock);
       
         if(currentUser !== null){          
           data.reviews.forEach((e)=>{

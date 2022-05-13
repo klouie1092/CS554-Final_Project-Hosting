@@ -86,7 +86,8 @@
 }
 
 .searchBar {
-	padding-bottom: 15px;
+	padding-top: 10px;
+	display: flex;
 }
 
 .navigation {
@@ -110,8 +111,26 @@
 	font-size: 30px;
 }
 
-.allButton {
-	font-size: 30px;
+.NotAButton {
+    margin-bottom: 0;
+	padding-top: 0px;
+	padding-left: 3px;
+	padding-right: 3px;
+    font-size: 30px;
+	height: 37px;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    text-decoration: none;
+	font-weight: bold;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.NotAButton:hover {
+	background-color: #eee;
 }
 
 .starsBig > * {
@@ -204,7 +223,7 @@
 .Checkout {
 	margin-right: 10%;
 	margin-left: 40px;
-	width: 300px;
+	width: 400px;
 }
 
 .Checkout > h1 {
