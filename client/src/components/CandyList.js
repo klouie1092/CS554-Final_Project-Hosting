@@ -163,14 +163,13 @@ const CandyList = () =>{
         <h1>{searchTerm ? 'Results for "' +searchTerm+ '"' : "All Candies"}</h1>
         <br />
         <label htmlFor='rating'>
-          filter this by rating:
+          filter rating above :
           <select name = "rating" id ="rating"  onChange={event => setFilteCandy(event.target.value)}>
-            <option value = ""> </option>
-            <option value = "0">1</option>
-            <option value = "1">2</option>
-            <option value = "2">3</option>
-            <option value = "3">4</option>
-            <option value = "4">5</option>
+            <option value = "0">0</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
           </select>
         </label>
         <br />

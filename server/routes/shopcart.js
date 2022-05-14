@@ -6,6 +6,7 @@ const flat = require('flat');
 const unflatten = flat.unflatten;
 const bluebird = require('bluebird');
 const axios = require('axios');
+const xss = require('xss');
 bluebird.promisifyAll(redis.RedisClient.prototype);
 bluebird.promisifyAll(redis.Multi.prototype);
 
@@ -22,7 +23,7 @@ router.get('/usershopcart/:useremail', async (req, res) => {
     res.status(400).json({error:'The useremail can not be all white space'})
     return
   }
-  const useremail = req.params.useremail
+  const useremail = xss(req.params.useremail)
   const checkemail = await client.existsAsync(useremail);
   if(checkemail === 1 ){
     //console.log("redis")
@@ -48,9 +49,9 @@ router.get('/usershopcart/:useremail', async (req, res) => {
 })
 
 router.put('/usershopcart/:useremail', async (req, res) => {
-  const candyInfo = req.body;
+  const candyInfo = xss(req.body);
   //console.log(req.body)
-  const useremail = req.params.useremail
+  const useremail = xss(req.params.useremail)
   //console.log(useremail)
   if(!req.params.useremail){
     res.status(400).json({ error: 'You must provide the user email' });
@@ -148,13 +149,13 @@ router.delete('/usershopcart/:useremail', async (req, res) => {
     res.status(400).json({error:'The useremail can not be all white space'})
     return
   }
-  const useremail = req.params.useremail
+  const useremail = xss(req.params.useremail)
   let del = await client.delAsync(useremail)
   return res.json(del)
 })
 
 router.delete('/usershopcartid/:useremail', async (req, res) => {
-  const cid = req.body.id
+  const cid = xss(req.body.id)
   if(!req.params.useremail){
     res.status(400).json({ error: 'You must provide the user email' });
     return;
@@ -179,7 +180,7 @@ router.delete('/usershopcartid/:useremail', async (req, res) => {
     res.status(400).json({error:'The id can not be all white space'})
     return
   }
-  const useremail = req.params.useremail
+  const useremail = xss(req.params.useremail)
   let getfromr = await client.lrangeAsync(useremail, 0 , -1)
   let num 
   getfromr = unflatten(getfromr)
