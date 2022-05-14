@@ -2,7 +2,7 @@ import React from 'react'
 import '../App.css';
 import Account from './Account';
 import {HashRouter as Router,Route, Routes} from 'react-router-dom'
-import Home from './Home';
+
 import Landing from './Landing'
 import Navigation from './Navigation';
 import SignIn from './SignIn'
@@ -25,9 +25,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Landing />} />
         <Route path='/CS554-Final_Project' element={<Landing />} />
-        <Route path='/home' element={<PrivateRoute />}>
-          <Route path='/home' element={<Home />} />
-        </Route>
+        
         <Route path='/shoppingcart' element={<ShoppingCart />}></Route>
         <Route path='/account' element={<PrivateRoute />}>
         <Route path='/account' element={<Account />} />
