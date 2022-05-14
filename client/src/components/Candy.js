@@ -65,8 +65,8 @@ const Candy = () =>{
     let candyId = candyInfo._id;
     
     try{
-      await axios.post('https://final554groupnull.herokuapp.com/review',{
-        candyId: candyId,
+       await axios.post('https://final554groupnull.herokuapp.com/review/',{
+       candyId: candyId,
         email: email,
         review: review,
         rating: rating
@@ -93,7 +93,6 @@ const Candy = () =>{
 
   const deleteReview = async()=>{
     try{
-
       await axios.post('https://final554groupnull.herokuapp.com/review/delete',{
         candyId: candyInfo._id,
         email: currentUser.email,
