@@ -10,7 +10,7 @@ function SignUp(){
         e.preventDefault();
         const{displayName, email, passwordOne, passwordTwo} = e.target.elements;
         if(passwordOne.value !== passwordTwo.value){
-            setPwMatch('PAsswords do not match');
+            setPwMatch('Passwords do not match');
             return false
         }
 

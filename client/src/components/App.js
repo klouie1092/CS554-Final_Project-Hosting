@@ -1,7 +1,7 @@
 import React from 'react'
 import '../App.css';
 import Account from './Account';
-import {BrowserRouter as Router,Route, Routes} from 'react-router-dom'
+import {HashRouter as Router,Route, Routes} from 'react-router-dom'
 import Home from './Home';
 import Landing from './Landing'
 import Navigation from './Navigation';
@@ -24,6 +24,7 @@ function App() {
       </div>
       <Routes>
         <Route path='/' element={<Landing />} />
+        <Route path='/CS554-Final_Project' element={<Landing />} />
         <Route path='/home' element={<PrivateRoute />}>
           <Route path='/home' element={<Home />} />
         </Route>
