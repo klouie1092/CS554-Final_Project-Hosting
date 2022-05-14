@@ -128,7 +128,7 @@ async function deleteReview(candyId,email){
     candy.reviews = newReviews;
     newTotalRating = ( (candy.numRatings*candy.rating) -rating)/ (candy.numRatings - 1);
 
-    candy.reviews.push(newReview);
+    //candy.reviews.push(newReview);
     candy.rating = newTotalRating;
     const updatedInfo = await candyCollection.updateOne(
       { _id: ObjectId(candyId) },
