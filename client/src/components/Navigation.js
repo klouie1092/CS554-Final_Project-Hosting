@@ -12,7 +12,9 @@ const Navigation = () => {
   //does someone know how to do this better as it forces a page refresh
   const handleSubmit = e => {
     e.preventDefault();
-    window.location.href = '/candies/' + nameEl.current.value
+    
+    window.location.href = window.location.href.split('#')[0] + `#/candies/${nameEl.current.value}`
+    //window.location.href = '/candies/' + nameEl.current.value
   }
 
   
@@ -27,15 +29,17 @@ const Navigation = () => {
             <div className='NotAButton'>All</div>
           </NavLink>
           <form className="searchForm" onSubmit={handleSubmit}>
-            <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
-            <button type="submit"><i className="fa fa-search"></i></button>
+            <label htmlFor='search'/>
+            <input id='search' type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
+            <label htmlFor='searchButton'/>
+            <button id='searchButton' type="submit"><i className="fa fa-search"></i></button>
           </form>
         </div>
         <NavLink className='weblink' to='/account'>
-          <i className="fa fa-user-circle" aria-hidden="true">Account</i>
+          <i className="fa fa-user-circle" aria-hidden="true"></i>Account
         </NavLink>
         <NavLink className='weblink' to='/shoppingcart'> 
-          <i className="fa fa-shopping-cart" aria-hidden="true">My Cart</i>
+          <i className="fa fa-shopping-cart" aria-hidden="true"></i>My Cart
         </NavLink>
       </nav>
     );
@@ -52,8 +56,10 @@ const Navigation = () => {
             <div className='NotAButton'>All</div>
           </NavLink>
           <form className="searchForm" onSubmit={handleSubmit}>
-            <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
-            <button type="submit"><i className="fa fa-search"></i></button>
+            <label htmlFor='search'/>
+            <input id='search' type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
+            <label htmlFor='searchButton'/>
+            <button id='searchButton' type="submit"><i className="fa fa-search"></i></button>
           </form>
         </div>
         <NavLink className='weblink' to='/signup'> 
