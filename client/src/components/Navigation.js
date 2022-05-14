@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import {NavLink} from 'react-router-dom';
 import { AuthContext } from '../firebase/Auth';
 import '../App.css';
@@ -24,7 +24,7 @@ const Navigation = () => {
         </NavLink>
         <div className='searchBar'>
           <NavLink className='weblink' to='/candies'>
-            <input className='allButton' type="submit" value="All"/>
+            <div className='NotAButton'>All</div>
           </NavLink>
           <form className="searchForm" onSubmit={handleSubmit}>
             <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>
@@ -49,7 +49,7 @@ const Navigation = () => {
         </NavLink>
         <div className='searchBar'>
           <NavLink className='weblink' to='/candies'>
-            <input className='allButton' type="submit" value="All"/>
+            <div className='NotAButton'>All</div>
           </NavLink>
           <form className="searchForm" onSubmit={handleSubmit}>
             <input type ="search" size="50" placeholder="Search For Candies" ref={nameEl}/>

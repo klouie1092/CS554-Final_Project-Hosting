@@ -86,7 +86,8 @@
 }
 
 .searchBar {
-	padding-bottom: 15px;
+	padding-top: 10px;
+	display: flex;
 }
 
 .navigation {
@@ -110,8 +111,26 @@
 	font-size: 30px;
 }
 
-.allButton {
-	font-size: 30px;
+.NotAButton {
+    margin-bottom: 0;
+	padding-top: 0px;
+	padding-left: 3px;
+	padding-right: 3px;
+    font-size: 30px;
+	height: 37px;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none;
+    border: 1px solid transparent;
+    text-decoration: none;
+	font-weight: bold;
+    color: #333;
+    background-color: #fff;
+    border-color: #ccc;
+}
+
+.NotAButton:hover {
+	background-color: #eee;
 }
 
 .starsBig > * {
@@ -120,4 +139,129 @@
 
 .starsBig {
 	padding-top: 4px;
+}
+
+/* Accounting page css */
+
+.OrderItem {
+	display: flex;
+}
+
+.orderImage {
+	height: 150px;
+	width:150px;
+	padding: 15px;
+}
+
+.OrderInfo {
+	width: 600px;
+	padding-left: 15px;
+}
+
+.OrderInfo > p {
+	margin-top: 10px;
+}
+
+.TopOrderInfo {
+	display: flex;
+	justify-content: space-between;
+}
+
+.TopOrderInfo > p > b {
+	font-size: 24px;
+}
+
+.BottomOrderInfo {
+	display: flex;
+	justify-content: space-between;
+}
+
+.BottomOrderInfo > button {
+	margin-top: 16px;
+	height: 22px;
+}
+
+.BottomOrderInfo > label > input {
+	margin-top: 16px;
+	height: 16px;
+}
+
+.PastPurchase {
+	display: flex;
+	justify-content: space-between;
+}
+
+.TotalOrderInfo {
+	margin-right: 10%;
+	margin-left: 80px;
+	width: 300px;
+}
+
+.TotalOrderInfo > p > b {
+	font-size: 24px;
+}
+
+.ShoppingCart {
+	margin-left: 5%;
+}
+
+.TopCheckout {
+	display: flex;
+}
+
+.TopCheckout > span {
+	font-size: 30px;
+}
+
+.TopCheckout > * {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.Checkout {
+	margin-right: 10%;
+	margin-left: 40px;
+	width: 400px;
+}
+
+.Checkout > h1 {
+	margin-top: 0px;
+}
+
+a:link { text-decoration: none; }
+
+
+a:visited { text-decoration: none; }
+
+
+a:hover { text-decoration: none; }
+
+
+a:active { text-decoration: none; }
+
+.MuiCardContent-root > .UnderLine {
+	text-decoration: underline;
+}
+
+.MuiCardContent-root > h2 {
+	color: black;
+}
+
+.MuiCardContent-root > .UnderLine:hover {
+	color: teal;
+}
+
+#quantChange, #itemDeleted {
+    text-align: center;
+    font-size: 24px;
+}
+
+#quantChange {
+	background-color: yellow;
+}
+
+#itemDeleted {
+	background-color: red;
 }

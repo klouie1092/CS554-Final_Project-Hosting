@@ -4,7 +4,6 @@ import { useParams, Link } from 'react-router-dom';
 
 import {
   Card,
-  CardActionArea,
   CardContent,
   CardMedia,
   Grid,
@@ -96,23 +95,21 @@ const CandyList = () =>{
   const buildCards = (candy) =>{
     return(
       <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={candy._id}>
-          <Card className={classes.card} variant='outlined'>
-            <CardActionArea>
-              <Link to={`/Candy/${candy._id}`}>
-                <CardMedia
-                  className={classes.media}
-                  component='img'
-                  image = {candy.image}
-                  title = 'image'
-                />
-                <CardContent>
-                  <h2>{candy.name}</h2>
-                  <h2>{makeStarRating(candy.rating)} {candy.numRatings}</h2>
-                  <h2>${candy.price.toFixed(2)}</h2>
-                </CardContent>
-              </Link>
-            </CardActionArea>
-          </Card>
+        <Card className={classes.card} variant='outlined'>
+          <Link to={`/Candy/${candy._id}`}>
+            <CardMedia
+              className={classes.media}
+              component='img'
+              image = {candy.image}
+              title = 'image'
+            />
+            <CardContent>
+              <h2 className='UnderLine'>{candy.name}</h2>
+              <h2>{makeStarRating(candy.rating)} ({candy.numRatings})</h2>
+              <h2>${candy.price.toFixed(2)}</h2>
+            </CardContent>
+          </Link>
+        </Card>
       </Grid>
     );
   }
@@ -163,16 +160,16 @@ const CandyList = () =>{
   } else{
     return(
       <div>
+        <h1>{searchTerm ? 'Results for "' +searchTerm+ '"' : "All Candies"}</h1>
         <br />
         <label htmlFor='rating'>
-          filter this by rating:
+          filter rating above :
           <select name = "rating" id ="rating"  onChange={event => setFilteCandy(event.target.value)}>
-            <option value = ""> </option>
-            <option value = "0">1</option>
-            <option value = "1">2</option>
-            <option value = "2">3</option>
-            <option value = "3">4</option>
-            <option value = "4">5</option>
+            <option value = "0">0</option>
+            <option value = "1">1</option>
+            <option value = "2">2</option>
+            <option value = "3">3</option>
+            <option value = "4">4</option>
           </select>
         </label>
         <br />

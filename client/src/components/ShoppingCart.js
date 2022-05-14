@@ -4,46 +4,10 @@ import axios from 'axios';
 import {Link} from "react-router-dom";
 
 import {
-    Card,
-    CardActionArea,
-    CardContent,
-    CardMedia,
-    Grid,
-    Typography,
-    makeStyles,
     Button
   } from '@material-ui/core';
 
 import '../App.css';
-
-const useStyles = makeStyles({
-    card: {
-      maxWidth: 350,
-      height: 'auto',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      borderRadius: 5,
-      border: '1px solid #1e8678',
-      boxShadow: '0 19px 38px rgba(0,0,0,0.30), 0 15px 12px rgba(0,0,0,0.22);'
-    },
-    titleHead: {
-      borderBottom: '1px solid #1e8678',
-      fontWeight: 'bold'
-    },
-    grid: {
-      flexGrow: 1,
-      flexDirection: 'row',
-    },
-    media: {
-      height: '100%',
-      width: '100%'
-    },
-    button: {
-      color: '#1e8678',
-      fontWeight: 'bold',
-      fontSize: 12
-    }
-  });
 
 function ShoppingCart() {
     const {currentUser} = useContext(AuthContext);
@@ -62,9 +26,7 @@ function ShoppingCart() {
     const [ zip, setZip] = useState(0);
     const [ payment, setPayment] = useState(0);
     //const [totalPrice, setTotalPrice] = useState(0);
-    const classes = useStyles();
     const intn = /^\+?[1-9][0-9]*$/
-    let card
     //console.log(currentUser.email)
     useEffect(() =>{
         async function fetchData(){
@@ -75,19 +37,20 @@ function ShoppingCart() {
                 let changed = [];
                 
                 //console.log(data.data)
+                let boolCheck = false;
                 for(let i = 0; i< data.data.length;i++){
                     let cand = candy.data.filter(ca=> data.data[i].id === ca._id)
                     
                     if(cand[0].stock ===0){
                         await axios.delete("https://final554groupnull.herokuapp.com/usershopcartid/" + currentUser.email,{ data: { id:cand[0]._id } })
                         
-                        if(itemDeleted ===false) setItemDeleted(true)
+                        if(boolCheck ===false) boolCheck = true
                     }
                     else if(cand[0].stock < data.data[i].numbers){
                         data.data[i].numbers = cand[0].stock;
                         let body = {id: cand[0]._id, name : cand[0].name, price: cand[0].price, image:cand[0].image, numbers:data.data[i].numbers}
                         await axios.put('https://final554groupnull.herokuapp.com/usershopcart/'+ currentUser.email, body,)
-                        
+                        changed.push(data.data[i])
                         newData.push(data.data[i])
                         
                     }
@@ -96,7 +59,7 @@ function ShoppingCart() {
                     }
                 }
                 
-                
+                setItemDeleted(boolCheck);
                 setQuantChange(changed);
                 setShopcartData(newData)
                 setCandyData(candy.data);
@@ -115,7 +78,8 @@ function ShoppingCart() {
         }
         fetchData();
 
-    }, [currentUser.email,itemDeleted]);
+    }, [currentUser.email]);
+
     const deleteC = async(id, candyNumber,name) =>{        
         try{
             await axios.delete("https://final554groupnull.herokuapp.com/usershopcartid/" + currentUser.email,{ data: { id:id } })
@@ -147,7 +111,7 @@ function ShoppingCart() {
         try{
             const {data} = await axios.get('https://final554groupnull.herokuapp.com/Candy/' + id);
             data1 = data
-            console.log(data1)
+            //console.log(data1)
         }
         catch(e){
             alert(e)
@@ -167,7 +131,7 @@ function ShoppingCart() {
           document.getElementById(id).value = ''
         }
         else if (numberha1  > data1.stock){
-          alert('input must less than candy left')
+          alert('There is not enough stock available to add that amount to your cart')
           document.getElementById(id).value = ''
         }
 
@@ -234,11 +198,11 @@ function ShoppingCart() {
             alert('please enter a valid state')
             return;
         }
-        if(typeof zip !== 'string' || isNaN(parseInt(zip))){
+        if(typeof zip !== 'string' || isNaN(parseInt(zip)) ||  zip.length !== 5){
             alert('please enter a valid zipcode')
             return
         }
-        if(typeof payment !== 'string' || isNaN(parseInt(payment))){
+        if(typeof payment !== 'string' || isNaN(parseInt(payment)) || payment.length > 19 || payment.length < 8){
             alert('please enter a valid credit card number')
             return
         }
@@ -299,49 +263,6 @@ function ShoppingCart() {
             alert(e);
         }
     }
-    const buildCards = (candy) =>{
-        return(
-            <Grid item xs={12} sm={6} md={4} lg={3} xl={2} key={candy.id}>
-                <Card className={classes.card} variant='outlined'>
-                    <CardActionArea>
-                        <Link to={`/Candy/${candy.id}`}>
-                            <CardMedia
-                                className={classes.media}
-                                component='img'
-                                image = {candy.image}
-                                title = 'image'
-                            />
-                            <CardContent>
-                                <Typography
-                                className={classes.titleHead}
-                                gutterBottom
-                                variant='h6'
-                                component='h3'
-                                >
-                                {candy.name}
-                                </Typography>   
-                            </CardContent>
-                        </Link>
-                        
-                        
-                        <h2>You have {candy.numbers} {candy.name} in your shopping cart </h2>
-                        {quantChange.includes(candy.id)&&currentUser&&(
-                            <h3>This quantity has changed!! </h3>
-                            )}
-                        <label>
-                            <input
-                                id={candy.id}
-                                name='number'
-                                placeholder='Change amount'
-                            />
-                        </label>
-                        <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Quantity</Button>
-                        <Button onClick={()=>deleteC(candy.id, candy.numbers,candy.name)}>Delete this candy</Button>
-                    </CardActionArea>
-                </Card>
-            </Grid>
-        );
-    } 
 
     if (error === true){
         return (
@@ -358,9 +279,7 @@ function ShoppingCart() {
         )
     }
     else{
-        //console.log(shopcart)
         if(shopcart === undefined || shopcart.length === 0){
-            //console.log('aaaa')
             return(
                 
                 <div>
@@ -372,61 +291,89 @@ function ShoppingCart() {
             )
         }
         else{
-            
-            //console.log(shopcart)
-            let totalprice = 0
-            card  = shopcart && shopcart.map((eachCandy) =>{
-                //console.log(eachCandy)
-                totalprice = totalprice + eachCandy.price * eachCandy.numbers
-                return buildCards(eachCandy);
-            })
+            const items = shopcart && shopcart.reduce((partialSum, a) => partialSum + a.numbers, 0);
+            const totalprice = shopcart && shopcart.reduce((partialSum, a) => partialSum + a.price * a.numbers, 0);
             return (
-                <div>
-
-                    {quantChange.length!==0&&currentUser&&(
-                        <h1 id='quantChange'>'Please review your cart, changes have been made due to changes in available stock</h1>
-                    )}
-                    {itemDeleted===true&&currentUser&&(
-                        <h2 id='itemDeleted'>Due to changes in stock, one or more items have been removed from your cart. Please review your items before checking out</h2>
-                    )}
-                    <Grid container className={classes.grid} spacing={5}>
-                        {card}
-                    </Grid>
-                    <h1>Total Price: {totalprice.toFixed(2)}</h1>
-                    <button onClick={() => setForm(!showForm)}>Check out</button>
-                    <form id='checkout' hidden={!showForm} onSubmit={dataCheck}>
-                        <label>First Name
-                        <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <label>Last Name
-                        <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <h3>Address:</h3>
-                        <label>Street Address
-                        <input type="text" id='street' value={street} onChange={e => setStreet(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <label>City
-                        <input type="text" id='city' value={city} onChange={e => setCity(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <label> State
-                        <input type="text" id= 'state' value={state} onChange={e => setState(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <label>Zipcode
-                        <input type="number" id='zip' value={zip} onChange={e => setZip(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <label>Credit Card Number
-                        <input type="number" id='payment' value={payment} onChange={e => setPayment(e.target.value)}/>
-                        </label>
-                        <br/>
-                        <input type="submit" value="Submit"/>
-                    </form>
+                <div className='FullPage'>
+                  {quantChange.length!==0&&currentUser&&(
+                    <div id='quantChange'>'Please review your cart, changes have been made due to changes in available stock</div>
+                  )}
+                  {itemDeleted===true&&currentUser&&(
+                    <div id='itemDeleted'>Due to changes in stock, one or more items have been removed from your cart. Please review your items before checking out</div>
+                  )}
+                  <div className='ShoppingCart'>
+                    <div className='TopCheckout'>
+                      <h1>Cart</h1>
+                      <span>({items} items)</span>
+                    </div>
+                    <div className='PastPurchase'>
+                      <div className='ItemList'>
+                        {shopcart && shopcart.map((candy) =>
+                        <div key={candy.id} className="OrderItem">
+                          <Link to={`/Candy/${candy.id}`}>
+                            <img className ='orderImage' src={candy.image} alt='candy'/>
+                          </Link>
+                          <div className="OrderInfo">
+                            <div className="TopOrderInfo">
+                              <p>{candy.name} </p>
+                              <p><b>${(candy.numbers * candy.price).toFixed(2)}</b></p>
+                            </div>
+                            <p>${candy.price.toFixed(2)} ea</p>
+                            <div className="BottomOrderInfo">
+                              <p>Quantity Purchased: {candy.numbers}</p>
+                              <label>
+                                <input
+                                  id={candy.id}
+                                  name='number'
+                                  placeholder='Change amount'
+                                />
+                              </label>
+                              <Button onClick={()=>changeCandy(candy.id,candy.name, candy.price, candy.image, candy.numbers)}> Edit Quantity</Button>
+                              <Button onClick={()=>deleteC(candy.id, candy.numbers,candy.name)}>Remove</Button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div className='Checkout'>
+                      <h1>Total Price: ${totalprice.toFixed(2)}</h1>
+                      <button onClick={() => setForm(!showForm)}>Check out</button>
+                      <form id='checkout' hidden={!showForm} onSubmit={dataCheck}>
+                          <label>First Name
+                          <input type="text" value={firstName} onChange={e => setFirstName(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <label>Last Name
+                          <input type="text" value={lastName} onChange={e => setLastName(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <h2>Address:</h2>
+                          <label>Street Address
+                          <input type="text" id='street' value={street} onChange={e => setStreet(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <label>City
+                          <input type="text" id='city' value={city} onChange={e => setCity(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <label> State
+                          <input type="text" id= 'state' value={state} onChange={e => setState(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <label>Zipcode
+                          <input type="number" id='zip' value={zip} onChange={e => setZip(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <label>Credit Card Number
+                          <input type="number" id='payment' value={payment} onChange={e => setPayment(e.target.value)}/>
+                          </label>
+                          <br/>
+                          <input type="submit" value="Submit"/>
+                      </form>
+                    </div>
+                  </div>
                 </div>
+              </div>
             );
         }
     }
