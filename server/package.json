@@ -1,7 +1,7 @@
 {
-  "name": "cs-554-project",
+  "name": "cs-554-lab-6",
   "version": "1.0.0",
-  "description": "final project",
+  "description": "My redux Lab6 module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/final554groupnull
 /package-lock.json
 /.pnp
 .pnp.js
