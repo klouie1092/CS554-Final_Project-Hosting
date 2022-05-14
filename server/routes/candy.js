@@ -16,7 +16,7 @@ router.get('/Candies', async (req, res) =>{
 });
 
 router.get('/Candy/:id', async (req,res) =>{
-    let candyId = req.params.id;
+    let candyId = xss(req.params.id);
 
     if(!candyId){
         res.status(400).json({error: '[candy Routes] candy id is not provided'})
@@ -70,8 +70,8 @@ router.post('/Candy/searchByName', async (req,res) =>{
 });
 
 router.post('/Candies/updateStock', async (req,res) =>{
-    let candyId = req.body.id;
-    let stockNumber = req.body.newStockNumber;
+    let candyId = xss(req.body.id);
+    let stockNumber = xss(req.body.newStockNumber);
     if (stockNumber === 0) stockNumber = -1;
     //console.log(req.body)
     
@@ -116,8 +116,8 @@ router.post('/Candies/updateStock', async (req,res) =>{
 });
 
 router.post('/Candies/stockDelete', async (req,res) =>{
-    let candyId = req.body.id;
-    let stockNumber = req.body.newStockNumber;
+    let candyId = xss(req.body.id);
+    let stockNumber = xss(req.body.newStockNumber);
 
     if(!candyId){
         res.status(400).json({error: '[candy Routes] id is not provided'})
