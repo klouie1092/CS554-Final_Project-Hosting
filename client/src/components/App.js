@@ -24,7 +24,7 @@ function App() {
       </div>
       <Routes>
         <Route path='/' element={<Landing />} />
-        <Route path='/CS554-Final_Project' element={<Landing />} />
+        <Route path='/CS554-Final_Project-Hosting' element={<Landing />} />
         <Route path='/home' element={<PrivateRoute />}>
           <Route path='/home' element={<Home />} />
         </Route>
